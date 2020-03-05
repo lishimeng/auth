@@ -1,0 +1,12 @@
+
+name = "Auth"
+
+version = "1.0.0"
+
+[web]
+listen = ":9527"
+
+[token]
+issuer = "tcp://localhost:1883"
+expire = 24
+secret = "secret"
