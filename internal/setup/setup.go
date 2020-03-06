@@ -1,6 +1,7 @@
 package setup
 
 import (
+	"context"
 	"github.com/kataras/iris"
 	"github.com/lishimeng/auth/internal/etc"
 	"github.com/lishimeng/auth/internal/token"
@@ -11,12 +12,12 @@ import (
 	"time"
 )
 
-func Setup() (err error) {
+func Setup(ctx context.Context) (err error) {
 
-	modules := []func()error{ setupToken, setupWeb}
+	modules := []func(context.Context)error{ setupToken, setupWeb}
 
 	for _, m := range modules {
-		err = m()
+		err = m(ctx)
 		if err != nil {
 			break
 		}
@@ -24,14 +25,14 @@ func Setup() (err error) {
 	return
 }
 
-func setupToken() (err error) {
+func setupToken(_ context.Context) (err error) {
 	token.Init(jwt.New([]byte(etc.Config.Token.Secret),
 		etc.Config.Token.Issuer,
 		time.Hour * time.Duration(etc.Config.Token.Expire)))
 	return
 }
 
-func setupWeb() (err error) {
+func setupWeb(ctx context.Context) (err error) {
 
 	go func() {
 		log.Info("start web server")
@@ -43,7 +44,8 @@ func setupWeb() (err error) {
 			_, _ = ctx.Text("not found(404~)")
 		})
 		s.RegisterComponents(api.TokenApi)
-		err = s.Start()
+
+		err = s.Start(ctx)
 		if err != nil {
 			log.Info(err)
 		}

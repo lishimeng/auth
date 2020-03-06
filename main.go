@@ -16,6 +16,8 @@ func main() {
 		}
 	}()
 
+	ctx := shutdown.Context()
+
 	etc.SetEnvPath([]string{".", "/etc/auth"})
 	etc.SetConfigName("config.toml")
 	err := etc.LoadEnvs()
@@ -24,7 +26,7 @@ func main() {
 		return
 	}
 
-	err = setup.Setup()
+	err = setup.Setup(ctx)
 	if err != nil {
 		log.Info(err)
 		return
