@@ -5,12 +5,13 @@ import (
 	"github.com/kataras/iris"
 	"github.com/lishimeng/auth/internal/login"
 	"github.com/lishimeng/auth/internal/token"
+	"github.com/lishimeng/go-log"
 	"strings"
 )
 
 func TokenApi(app *iris.Application) {
 
-	p := app.Party("token")
+	p := app.Party("/token")
 	p.Post("/gen", genToken)
 	p.Get("/verify", verifyToken)
 }
@@ -40,13 +41,16 @@ func genToken(ctx iris.Context) {
 	}
 
 	// TODO login
+	log.Debug("login")
 	ui, err := login.Login(form.Name, form.Password)
 	if err != nil {
+		log.Debug("login failed")
 		resp.Response.Code = -1
 		return
 	}
 
 	//
+	log.Debug("gen token")
 	t, success := token.Gen(ui.Uid, form.LoginType)
 	if success {
 		resp.Token = t

@@ -7,6 +7,6 @@ version = "1.0.0"
 listen = ":9527"
 
 [token]
-issuer = "tcp://localhost:1883"
+issuer = "lism"
 expire = 24
-secret = "secret"
+secret = "2lP2ybr5c3ZKjH2SlZk7krbrv8T9eFxQ"
