@@ -6,6 +6,10 @@ version = "1.0.0"
 [web]
 listen = ":9527"
 
+[user]
+name = "admin"
+password = "admin"
+
 [token]
 issuer = "lism"
 expire = 24

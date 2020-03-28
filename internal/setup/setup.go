@@ -3,6 +3,7 @@ package setup
 import (
 	"context"
 	"github.com/lishimeng/auth/internal/etc"
+	"github.com/lishimeng/auth/internal/login"
 	"github.com/lishimeng/auth/internal/token"
 	"github.com/lishimeng/go-libs/jwt"
 	"time"
@@ -10,7 +11,7 @@ import (
 
 func Setup(ctx context.Context) (err error) {
 
-	modules := []func(context.Context)error{ setupToken}
+	modules := []func(context.Context)error{ setUpSysUser, setupToken}
 
 	for _, m := range modules {
 		err = m(ctx)
@@ -18,6 +19,11 @@ func Setup(ctx context.Context) (err error) {
 			break
 		}
 	}
+	return
+}
+
+func setUpSysUser(_ context.Context) (err error) {
+	login.InitSysUser(etc.Config.User.Name, etc.Config.User.Password)
 	return
 }
 

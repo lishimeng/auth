@@ -7,7 +7,11 @@ type UserInfo struct {
 	LoginName string
 }
 
-var systemUser = map[string]string{"admin":"lism"}
+var systemUser = map[string]string{}
+
+func InitSysUser(name, password string) {
+	systemUser[name] = password
+}
 
 func Login(name, password string) (ui UserInfo, err error) {
 
