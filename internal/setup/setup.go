@@ -11,7 +11,7 @@ import (
 
 func Setup(ctx context.Context) (err error) {
 
-	modules := []func(context.Context)error{ setUpSysUser, setupToken}
+	modules := []func(context.Context) error{setUpSysUser, setupToken}
 
 	for _, m := range modules {
 		err = m(ctx)
@@ -30,6 +30,6 @@ func setUpSysUser(_ context.Context) (err error) {
 func setupToken(_ context.Context) (err error) {
 	token.Init(jwt.New([]byte(etc.Config.Token.Secret),
 		etc.Config.Token.Issuer,
-		time.Hour * time.Duration(etc.Config.Token.Expire)))
+		time.Hour*time.Duration(etc.Config.Token.Expire)))
 	return
 }

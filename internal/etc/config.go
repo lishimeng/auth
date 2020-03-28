@@ -22,4 +22,3 @@ func SetEnvPath(env []string) {
 func SetConfigName(name string) {
 	configName = name
 }
-

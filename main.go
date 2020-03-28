@@ -5,6 +5,7 @@ import (
 	"github.com/lishimeng/auth/internal/etc"
 	"github.com/lishimeng/auth/internal/setup"
 	"github.com/lishimeng/auth/internal/web/api"
+	"time"
 
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/go-app-shutdown"
@@ -49,12 +50,10 @@ func main() {
 		return
 	}
 
-
-
-
 	shutdown.WaitExit(&shutdown.Configuration{
 		BeforeExit: func(s string) {
 			log.Info(s)
 		},
 	})
+	time.Sleep(time.Second)
 }

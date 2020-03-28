@@ -3,7 +3,7 @@ package login
 import "errors"
 
 type UserInfo struct {
-	Uid string
+	Uid       string
 	LoginName string
 }
 
@@ -17,7 +17,7 @@ func Login(name, password string) (ui UserInfo, err error) {
 
 	ui = UserInfo{}
 	v, ok := systemUser[name]
-	if ok && v==password {
+	if ok && v == password {
 		ui.Uid = name
 		ui.LoginName = name
 		return
