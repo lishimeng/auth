@@ -12,6 +12,7 @@ func TokenApi(app *iris.Application) {
 
 	p := app.Party("/token")
 	p.Post("/gen", genToken)
+	p.Post("/generate", genDirectToken)
 	p.Get("/verify", verifyToken)
 }
 
@@ -43,6 +44,30 @@ func genToken(ctx iris.Context) {
 	if err != nil {
 		resp.Response.Code = -1
 		return
+	}
+
+	t, success := token.Gen(ui.Uid, form.LoginType)
+	if success {
+		resp.Token = t
+		_, err = ctx.JSON(&resp)
+	}
+}
+
+func genDirectToken(ctx iris.Context) {
+
+	var form TokenReqForm
+	var resp = TokenGenResp{
+		Response: Response{Code: 0},
+	}
+	err := ctx.ReadForm(&form)
+	if err != nil {
+		resp.Response.Code = -1
+		return
+	}
+
+	ui := login.UserInfo{
+		Uid: form.Uid,
+		LoginName: form.Name,
 	}
 
 	t, success := token.Gen(ui.Uid, form.LoginType)
