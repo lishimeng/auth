@@ -1,12 +1,14 @@
 package token
 
 import (
-	"github.com/lishimeng/go-libs/jwt"
+	"github.com/lishimeng/auth/internal/jwt"
+	"time"
 )
 
 type Token struct {
 	jwt.Claims
 	Jwt string `json:"jwt"`
+	Expire time.Duration `json:"-"`
 }
 
 var jwtHandler *jwt.Handler
@@ -15,18 +17,25 @@ func Init(handler jwt.Handler) {
 	jwtHandler = &handler
 }
 
-func Gen(uid string, loginType int32, ) (token Token, success bool) {
+func Gen(uid string, loginType int32, expire time.Duration) (token Token, success bool) {
 
-	req := jwt.Token{
-		BaseToken: jwt.BaseToken{UID: uid, LoginType: loginType},
-		Audience:  uid,
+	var req jwt.TokenReq
+	req.UID = uid
+	req.Type = loginType
+	if expire > 0 {
+		req.Expire = expire
+	} else {
+
 	}
+
 	var claims *jwt.Claims
+	var tokenExpire time.Duration
 	var signedToken string
-	claims, signedToken, success = jwtHandler.GenToken(req)
+	claims, tokenExpire, signedToken, success = jwtHandler.GenToken(req)
 	if success {
 		token = Token{
 			Claims: *claims,
+			Expire: tokenExpire,
 			Jwt:    signedToken,
 		}
 	}
