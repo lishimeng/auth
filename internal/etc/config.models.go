@@ -1,26 +1,37 @@
 package etc
 
 type Configuration struct {
-	Name    string `toml:"name"`
-	Version string `toml:"version"`
-	Web     web    `toml:"web"`
-	Token   token  `toml:"token"`
-	Redis   redis  `toml:"redis"`
+	Name    string
+	Version string
+	Web     web
+	Token   token
+	Redis   redis
+	Db  db
 }
 
 type web struct {
-	Listen string `toml:"listen"`
+	Listen string
 }
 
 type token struct {
-	Issuer string `toml:"issuer"`
-	Expire uint16 `toml:"expire"`
-	Secret string `toml:"secret"`
+	Issuer string
+	Expire uint16
+	Secret string
 }
 
 type redis struct {
-	Enable bool `toml:"enable"`
-	Addr string `toml:"addr"`
-	Password string `toml:"password"`
-	Db int `toml:"db"`
+	Enable bool
+	Addr string
+	Password string
+	Db int
 }
+
+type db struct {
+	User     string
+	Password string
+	Host     string
+	Port     int
+	Database string
+	Ssl      string
+}
+

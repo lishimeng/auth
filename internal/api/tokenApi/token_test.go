@@ -1,14 +1,15 @@
-package api
+package tokenApi
 
 import (
 	"encoding/json"
 	"fmt"
+	"github.com/lishimeng/app-starter"
 	"strings"
 	"testing"
 )
 
 func TestResponse(t *testing.T) {
-	resp := Response{
+	resp := app.Response{
 		Code:    0,
 		Message: "",
 	}

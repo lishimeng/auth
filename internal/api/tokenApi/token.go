@@ -1,38 +1,30 @@
-package api
+package tokenApi
 
 import (
 	"fmt"
-	"github.com/kataras/iris"
+	"github.com/kataras/iris/v12"
 	"github.com/lishimeng/app-starter"
-	"github.com/lishimeng/auth/internal/cache"
 	"github.com/lishimeng/auth/internal/etc"
 	"github.com/lishimeng/auth/internal/token"
 	"strings"
 	"time"
 )
 
-func TokenApi(app *iris.Application) {
-
-	p := app.Party("/token")
-	p.Post("/gen", genToken)
-	p.Get("/verify", verifyToken)
-}
-
-type TokenReqForm struct {
+type ReqForm struct {
 	Uid           string `json:"uid,omitempty"`
 	LoginType     int32  `json:"type,omitempty"`
 	ExpireMinutes int    `json:"expire,omitempty"`
 }
 
-type TokenGenResp struct {
+type GenResp struct {
 	app.Response
 	token.Token
 }
 
-func genToken(ctx iris.Context) {
+func GenToken(ctx iris.Context) {
 
-	var form TokenReqForm
-	var resp = TokenGenResp{
+	var form ReqForm
+	var resp = GenResp{
 	}
 	resp.SetCode(0)
 
@@ -58,11 +50,11 @@ func genToken(ctx iris.Context) {
 func persistent(t token.Token) {
 	if etc.Config.Redis.Enable {
 		key := fmt.Sprintf("%s:%d", t.UID, t.Type)
-		_ = cache.Set(key, t.Jwt, t.Expire + time.Minute)
+		_ = app.GetCache().Set(key, t.Jwt)
 	}
 }
 
-func verifyToken(ctx iris.Context) {
+func VerifyToken(ctx iris.Context) {
 
 	var resp app.Response
 	resp.SetCode(0)
@@ -75,7 +67,7 @@ func verifyToken(ctx iris.Context) {
 	}
 
 	if len(tokenStr) == 0 {
-		tokenStr = ctx.URLParamTrim("token")
+		tokenStr = ctx.URLParamTrim("tokenApi")
 	}
 	success := token.Verify(tokenStr, "")
 

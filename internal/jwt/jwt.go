@@ -67,7 +67,7 @@ func (h *Handler) VerifyToken(signedToken string) (claims *Claims, success bool)
 	return
 }
 
-// CreateToken create token
+// CreateToken create tokenApi
 func (h *Handler) CreateToken(claims *Claims) (signedToken string, success bool) {
 	token := proxy.NewWithClaims(proxy.SigningMethodHS256, claims)
 	signedToken, err := token.SignedString(h.key)
@@ -79,7 +79,7 @@ func (h *Handler) CreateToken(claims *Claims) (signedToken string, success bool)
 	return
 }
 
-// ValidateToken validate token
+// ValidateToken validate tokenApi
 func (h *Handler) ValidateToken(signedToken string) (claims *Claims, success bool) {
 	token, err := proxy.ParseWithClaims(signedToken, &Claims{},
 		func(token *proxy.Token) (interface{}, error) {
