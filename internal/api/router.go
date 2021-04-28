@@ -24,4 +24,5 @@ func user(p iris.Party) {
 	p.Post("/sign_in", userApi.SignIn)
 	p.Post("/sign_in_card", userApi.SignInCard)
 	p.Post("/logout", userApi.Logout)
+	p.Get("/info/{id}", userApi.GenUserInfo)
 }

@@ -5,9 +5,11 @@ import (
 	"fmt"
 	"github.com/astaxie/beego/orm"
 	"github.com/lishimeng/app-starter"
+	"github.com/lishimeng/app-starter/cache"
 	etc2 "github.com/lishimeng/app-starter/etc"
 	"github.com/lishimeng/auth/cmd"
 	"github.com/lishimeng/auth/internal/api"
+	"github.com/lishimeng/auth/internal/db/model"
 	"github.com/lishimeng/auth/internal/etc"
 	"github.com/lishimeng/auth/internal/setup"
 	"github.com/lishimeng/go-log"
@@ -60,10 +62,24 @@ func _main() (err error) {
 			SSL:       etc.Config.Db.Ssl,
 		}
 
-		builder.EnableDatabase(dbConfig.Build()).
-			//SetWebLogLevel("debug").
+		redisOpts := cache.RedisOptions{
+			Addr: etc.Config.Redis.Addr,
+			Password: etc.Config.Redis.Password,
+		}
+		cacheOpts := cache.Options{
+			MaxSize: 10000,
+			Ttl:     time.Hour*24,
+		}
+		builder.EnableDatabase(dbConfig.Build(),
+			new(model.AuthUser),
+			new(model.AuthUserOrganization),
+			new(model.AuthRoleOrganization),
+			new(model.AuthOrganization),
+			new(model.AuthUserRoles),
+			new(model.AuthRole)).
+			SetWebLogLevel("debug").
+			EnableCache(redisOpts, cacheOpts).
 			EnableWeb(etc.Config.Web.Listen, api.Route).ComponentAfter(setup.Setup)
-
 		return err
 	}, func(s string) {
 		log.Info(s)

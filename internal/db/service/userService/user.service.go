@@ -36,5 +36,7 @@ func GetUser(uid int) (u model.AuthUser, err error) {
 }
 
 func GetAuthUserOrg(u model.AuthUser) (uo model.AuthUserOrganization, err error) {
+	ctx := app.GetOrm()
+	uo, err = repo.GetAuthUserOrg(*ctx, u)
 	return
 }

@@ -25,6 +25,12 @@ func AddUser(ctx persistence.OrmContext, u *model.AuthUser) (err error) {
 	return
 }
 
-func UpdateUserPassword(ctx persistence.OrmContext, u *model.AuthUser) {
-	ctx.Context.Update(u, "Password")
+func UpdateUserPassword(ctx persistence.OrmContext, u *model.AuthUser) (err error) {
+	_, err = ctx.Context.Update(u, "Password")
+	return
+}
+
+func GetAuthUserOrg(ctx persistence.OrmContext, u model.AuthUser) (auo model.AuthUserOrganization, err error) {
+	err = ctx.Context.QueryTable(new(model.AuthUserOrganization)).Filter("UserId", u.Id).One(&auo)
+	return
 }
