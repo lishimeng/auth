@@ -1,10 +1,17 @@
 package model
 
-import "time"
+import (
+	"fmt"
+	"time"
+)
 
 type Pk struct {
 	// ID
 	Id int `orm:"pk;auto;column(id)"`
+}
+
+func (pk *Pk) PkString() string {
+	return fmt.Sprintf("%d", pk.Id)
 }
 
 type TableChangeInfo struct {

@@ -10,6 +10,8 @@ import (
 const (
 	RespCodeSuccess  = 200
 	RespCodeNotFound = 404
+
+	RespCodeInternalError = 500
 )
 
 const (

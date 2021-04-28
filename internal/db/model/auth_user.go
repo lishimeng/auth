@@ -6,5 +6,6 @@ type AuthUser struct {
 	UserName string `orm:"column(user_name);unique"`
 	Email    string `orm:"column(email);unique"`
 	Phone    string `orm:"column(mobile_phone);unique"`
+	Password string `orm:"column(password)"`
 	TableChangeInfo
 }
