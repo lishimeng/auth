@@ -15,7 +15,7 @@ var u = model.AuthUser{
 	Email:           "",
 	Phone:           "",
 	Password:        "",
-	TableChangeInfo: model.TableChangeInfo{},
+	TableChangeInfo: model.TableChangeInfo{CreateTime: now, UpdateTime: now, Status: 0},
 }
 
 var password = "123456"
