@@ -22,5 +22,6 @@ func token(p iris.Party) {
 
 func user(p iris.Party) {
 	p.Post("/sign_in", userApi.SignIn)
+	p.Post("/sign_in_card", userApi.SignInCard)
 	p.Post("/logout", userApi.Logout)
 }

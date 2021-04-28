@@ -14,6 +14,12 @@ func GetUserAsLogin(ctx persistence.OrmContext, param string) (u model.AuthUser,
 	return
 }
 
+func GetAuthUserById(ctx persistence.OrmContext, uid int) (u model.AuthUser, err error) {
+	u.Id = uid
+	err = ctx.Context.Read(&u)
+	return
+}
+
 func AddUser(ctx persistence.OrmContext, u *model.AuthUser) (err error) {
 	_, err = ctx.Context.Insert(u)
 	return

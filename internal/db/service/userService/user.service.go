@@ -28,3 +28,13 @@ func AddUser(u *model.AuthUser) (err error) {
 
 	return
 }
+
+func GetUser(uid int) (u model.AuthUser, err error) {
+	ctx := app.GetOrm()
+	u, err = repo.GetAuthUserById(*ctx, uid)
+	return
+}
+
+func GetAuthUserOrg(u model.AuthUser) (uo model.AuthUserOrganization, err error) {
+	return
+}
