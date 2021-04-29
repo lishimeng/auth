@@ -6,4 +6,8 @@ const (
 
 	addUserDefault = 11000
 	AddUserFailed = addUserDefault + 1
+
+	editPasswordDefault = 12000
+	EditPasswordSuccess = editPasswordDefault + 1
+	EditPasswordFailed  = EditPasswordSuccess + 1
 )

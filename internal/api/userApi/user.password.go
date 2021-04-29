@@ -1,6 +1,12 @@
 package userApi
 
-import "github.com/kataras/iris/v12"
+import (
+	"github.com/kataras/iris/v12"
+	"github.com/lishimeng/app-starter"
+	"github.com/lishimeng/auth/internal/common"
+	"github.com/lishimeng/auth/internal/respcode"
+	"github.com/lishimeng/go-log"
+)
 
 type PasswordReq struct {
 	Uid int `json:"uid"`
@@ -11,6 +17,12 @@ type PasswordReq struct {
 type PasswordResetReq struct {
 	Uid int `json:"uid"`
 	Key string `json:"key"` // passwd:reset:{uuid} = uid
+	Password string `json:"password,omitempty"`
+}
+
+type PasswordResetResp struct {
+	app.Response
+	Uid int `json:"uid"`
 	Password string `json:"password,omitempty"`
 }
 
@@ -49,8 +61,36 @@ func ChangePasswordWithKey(ctx iris.Context) {
  */
 func ResetPassword(ctx iris.Context) {
 
+	var err error
+	var req PasswordResetReq
+	var resp PasswordResetResp
+	err = ctx.ReadJSON(&req)
+	if err != nil {
+		log.Info("read param fail")
+		log.Info(err)
+		resp.Code = common.RespCodeInternalError
+		common.ResponseJSON(ctx, resp)
+		return
+	}
 	// TODO verify key
+	var forUid string
+	err = app.GetCache().Get(req.Key, &forUid)
+	if err != nil {
+		log.Info("unknown key")
+		log.Info(err)
+		resp.Code = respcode.EditPasswordFailed
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+	//if len(forUid) == 0 {
+	//	log.Info("unknown key")
+	//	log.Info(err)
+	//	resp.Code = respcode.EditPasswordFailed
+	//	common.ResponseJSON(ctx, resp)
+	//	return
+	//}
 	// TODO del key
+
 	// TODO gen random passwd
 	// TODO change passwd
 }
