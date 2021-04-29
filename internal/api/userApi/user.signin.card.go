@@ -32,7 +32,7 @@ func SignInCard(ctx iris.Context) {
 	if err != nil {
 		log.Info("sign in failed")
 		log.Info(err)
-		resp.Code = respcode.RespSignInFailed
+		resp.Code = respcode.SignInFailed
 		common.ResponseJSON(ctx, resp)
 		return
 	}
@@ -47,7 +47,7 @@ func SignInCard(ctx iris.Context) {
 	t, success := token.Gen(u.PkString(), 1, 0)
 	if !success {
 		log.Info("create jwt failed")
-		resp.Code = respcode.RespSignInFailed
+		resp.Code = respcode.SignInFailed
 		common.ResponseJSON(ctx, resp)
 		return
 	}

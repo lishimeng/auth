@@ -1,6 +1,9 @@
 package respcode
 
 const (
-	respSignInDefault = 10000
-	RespSignInFailed = respSignInDefault + 1
+	signInDefault = 10000
+	SignInFailed  = signInDefault + 1
+
+	addUserDefault = 11000
+	AddUserFailed = addUserDefault + 1
 )

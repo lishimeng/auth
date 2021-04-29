@@ -18,9 +18,9 @@ type TableChangeInfo struct {
 	// 状态
 	Status int `orm:"column(status)"`
 	// 创建时间
-	CreateTime time.Time `orm:"auto_now_add;type(datetime);column(ctime)"`
+	CreateTime time.Time `orm:"auto_now_add;type(datetime);column(ctime);null"`
 	// 修改时间
-	UpdateTime time.Time `orm:"auto_now;type(datetime);column(mtime)"`
+	UpdateTime time.Time `orm:"auto_now;type(datetime);column(mtime);null"`
 }
 
 type TableInfo struct {

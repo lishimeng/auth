@@ -25,4 +25,9 @@ func user(p iris.Party) {
 	p.Post("/sign_in_card", userApi.SignInCard)
 	p.Post("/logout", userApi.Logout)
 	p.Get("/info/{id}", userApi.GenUserInfo)
+	p.Post("/add", userApi.Add)
+
+	p.Post("/password/change", userApi.ChangePassword)
+	p.Post("/password/change", userApi.ChangePassword)
+	p.Post("/password/reset", userApi.ResetPassword)
 }

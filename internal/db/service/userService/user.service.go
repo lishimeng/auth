@@ -11,6 +11,7 @@ import (
 func AddUser(u *model.AuthUser) (err error) {
 	err = app.GetOrm().Transaction(func(ctx persistence.OrmContext) (e error) {
 		// save user
+		u.Status = 1 // TODO
 		e = repo.AddUser(ctx, u)
 		if e != nil {
 			return
@@ -22,7 +23,7 @@ func AddUser(u *model.AuthUser) (err error) {
 		}
 		// update user
 		u.Password = pswEnc
-		repo.UpdateUserPassword(ctx, u)
+		e = repo.UpdateUserPassword(ctx, u)
 		return e
 	})
 

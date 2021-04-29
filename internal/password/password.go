@@ -27,8 +27,8 @@ func Compare(u model.AuthUser, plaintext string) (success bool) {
 }
 
 func genPlainPassword(u model.AuthUser, plaintext string) (s string) {
-	ts := u.CreateTime.Format(common.DefaultTimeFormatter)
-	salt := fmt.Sprintf("%d.%s.%s_.%s", u.Id, u.Email, ts, plaintext)
+	ts := u.CreateTime.Format(common.DateFormatter)
+	salt := fmt.Sprintf("%d.%d.%s_.%s", u.Id, u.Id, ts, plaintext)
 	return digest(plaintext, salt, 10)
 }
 

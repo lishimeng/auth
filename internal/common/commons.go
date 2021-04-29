@@ -25,6 +25,7 @@ func ResponseJSON(ctx iris.Context, j interface{}) {
 
 const (
 	DefaultTimeFormatter = "2006-01-02:15:04:05"
+	DateFormatter        = "2006-01-02"
 	DefaultCodeLen       = 16
 )
 
