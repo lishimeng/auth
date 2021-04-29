@@ -11,6 +11,11 @@ import (
 	"github.com/lishimeng/go-log"
 )
 
+type JwtCache struct {
+	Uid int
+	OrgId int
+}
+
 func SignInCard(ctx iris.Context) {
 	var err error
 	var req Req
@@ -48,6 +53,18 @@ func SignInCard(ctx iris.Context) {
 	if !success {
 		log.Info("create jwt failed")
 		resp.Code = respcode.SignInFailed
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+
+	var jwtCache = JwtCache{
+		Uid:   u.Id,
+		OrgId: auo.OrgId,
+	}
+	err = app.GetCache().Set(t.Jwt, jwtCache)
+	if !success {
+		log.Info("save jwt failed")
+		resp.Code = common.RespCodeInternalError
 		common.ResponseJSON(ctx, resp)
 		return
 	}
