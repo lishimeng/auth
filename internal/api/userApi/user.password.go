@@ -4,6 +4,8 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/auth/internal/common"
+	"github.com/lishimeng/auth/internal/db/service/userService"
+	"github.com/lishimeng/auth/internal/password"
 	"github.com/lishimeng/auth/internal/respcode"
 	"github.com/lishimeng/go-log"
 )
@@ -73,7 +75,7 @@ func ResetPassword(ctx iris.Context) {
 		return
 	}
 	// TODO verify key
-	var forUid string
+	var forUid int
 	err = app.GetCache().Get(req.Key, &forUid)
 	if err != nil {
 		log.Info("unknown key")
@@ -89,8 +91,38 @@ func ResetPassword(ctx iris.Context) {
 	//	common.ResponseJSON(ctx, resp)
 	//	return
 	//}
+
 	// TODO del key
 
 	// TODO gen random passwd
+	u, err := userService.GetUser(forUid)
+	if err != nil {
+		log.Info("unknown uid:%d", forUid)
+		log.Info(err)
+		resp.Code = common.RespCodeNotFound
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+	var plainPassword = common.RandTxt(12)
+	newPasswd, err := password.Generate(u, plainPassword)
+	if err != nil {
+		log.Info("gen password failed")
+		log.Info(err)
+		resp.Code = common.RespCodeInternalError
+		common.ResponseJSON(ctx, resp)
+		return
+	}
 	// TODO change passwd
+	err = userService.ChangePassword(u, newPasswd)
+	if err != nil {
+		log.Info("update password failed")
+		log.Info(err)
+		resp.Code = common.RespCodeInternalError
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+
+	resp.Code = common.RespCodeSuccess
+	resp.Password = plainPassword
+	common.ResponseJSON(ctx, resp)
 }

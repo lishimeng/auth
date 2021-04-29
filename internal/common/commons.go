@@ -33,8 +33,19 @@ func FormatTime(t time.Time) (s string) {
 	s = t.Format(DefaultTimeFormatter)
 	return
 }
-func GetRandomString(n int) string {
+func RandomString(n int) string {
 	randBytes := make([]byte, n/2)
 	rand.Read(randBytes)
 	return fmt.Sprintf("%x", randBytes)
+}
+
+var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()")
+
+func RandTxt(n int) string {
+	b := make([]rune, n)
+	r:=rand.New(rand.NewSource(time.Now().UnixNano()))
+	for i := range b {
+		b[i] = letters[r.Intn(62+10)]
+	}
+	return string(b)
 }

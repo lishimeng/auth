@@ -41,3 +41,10 @@ func GetAuthUserOrg(u model.AuthUser) (uo model.AuthUserOrganization, err error)
 	uo, err = repo.GetAuthUserOrg(*ctx, u)
 	return
 }
+
+func ChangePassword(u model.AuthUser, passwd string) (err error) {
+	ctx := app.GetOrm()
+	u.Password = passwd
+	err = repo.UpdateUserPassword(*ctx, &u)
+	return
+}
