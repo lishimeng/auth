@@ -11,3 +11,15 @@ func GetUserRoles(uid int) (roles []model.AuthUserRoles, err error) {
 	roles, err = repo.GetAuthUserRolesByUser(*ctx, uid)
 	return
 }
+
+func GetOrgRoles(oid int) (roles []model.AuthRoleOrganization, err error) {
+	ctx := app.GetOrm()
+	roles, err = repo.GetAuthRolesByOrg(*ctx, oid)
+	return
+}
+
+func GetRole(rid int) (r model.AuthRole, err error) {
+	ctx := app.GetOrm()
+	r, err = repo.GetAuthRoleById(*ctx, rid)
+	return
+}

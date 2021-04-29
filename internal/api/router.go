@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/kataras/iris/v12"
+	"github.com/lishimeng/auth/internal/api/roleApi"
 	"github.com/lishimeng/auth/internal/api/tokenApi"
 	"github.com/lishimeng/auth/internal/api/userApi"
 )
@@ -30,4 +31,8 @@ func user(p iris.Party) {
 	p.Post("/password/change", userApi.ChangePassword)
 	p.Post("/password/change", userApi.ChangePassword)
 	p.Post("/password/reset", userApi.ResetPassword)
+}
+
+func role(p iris.Party) {
+	p.Post("/list/{id}", roleApi.GetRoleList)
 }
