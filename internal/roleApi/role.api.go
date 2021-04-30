@@ -15,6 +15,7 @@ type Req struct {
 
 type Resp struct {
 	app.Response
+	Jwt   string           `json:"jwt,omitempty"`
 	Roles []model.AuthRole `json:"roles,omitempty"`
 }
 
