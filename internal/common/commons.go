@@ -8,6 +8,11 @@ import (
 )
 
 const (
+	CacheRsaBits   = 1024
+	CacheSignInKey = "global:sign_in:key"
+)
+
+const (
 	RespCodeSuccess  = 200
 	RespCodeNotFound = 404
 
@@ -26,6 +31,7 @@ func ResponseJSON(ctx iris.Context, j interface{}) {
 const (
 	DefaultTimeFormatter = "2006-01-02:15:04:05"
 	DateFormatter        = "2006-01-02"
+	DateFormatterNoSplit = "20060102"
 	DefaultCodeLen       = 16
 )
 
@@ -43,7 +49,7 @@ var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUV
 
 func RandTxt(n int) string {
 	b := make([]rune, n)
-	r:=rand.New(rand.NewSource(time.Now().UnixNano()))
+	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := range b {
 		b[i] = letters[r.Intn(62+10)]
 	}
