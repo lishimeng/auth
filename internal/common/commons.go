@@ -46,12 +46,11 @@ func RandomString(n int) string {
 	return fmt.Sprintf("%x", randBytes)
 }
 
-<<<<<<< HEAD
 const (
 	UserStatusActivate   = 20
 	UserStatusDeActivate = 10
 )
-=======
+
 var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()")
 
 func RandTxt(n int) string {
@@ -62,4 +61,3 @@ func RandTxt(n int) string {
 	}
 	return string(b)
 }
->>>>>>> cc345bf6657e7231f06e8def290b3fd2dcfaa5ab
