@@ -7,15 +7,16 @@ import (
 )
 
 type BaseToken struct {
-	UID  string `json:"uid"`     // id
+	UID  int   `json:"uid"`  // id
+	OID  int   `json:"oid"`  // organization
 	Type int32 `json:"type"` // 登录方式
 }
 
 type TokenReq struct {
 	BaseToken
-	Audience  string
-	Subject   string
-	Expire time.Duration
+	Audience string
+	Subject  string
+	Expire   time.Duration
 }
 
 type Claims struct {
@@ -37,7 +38,7 @@ func New(key []byte, issuer string, expire time.Duration) Handler {
 func (h *Handler) GenToken(t TokenReq) (claims *Claims, expire time.Duration, signedToken string, success bool) {
 
 	claims = &Claims{
-		BaseToken:      t.BaseToken,
+		BaseToken: t.BaseToken,
 		StandardClaims: proxy.StandardClaims{
 			Issuer: h.issuer,
 		},

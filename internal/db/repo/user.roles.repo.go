@@ -7,7 +7,7 @@ import (
 )
 
 func DeleteUserRole(aur model.AuthUserRoles, cols ...string) (err error) {
-	_, err = app.GetOrm().Context.Delete(aur, cols...)
+	_, err = app.GetOrm().Context.Delete(&aur, cols...)
 	return
 }
 
