@@ -8,6 +8,13 @@ import (
 	"github.com/lishimeng/go-log"
 )
 
+type RespRoleInfo struct {
+	Id              int    `json:"id,omitempty"`
+	RoleName        string `json:"roleName,omitempty"`
+	RoleDescription string `json:"roleDesc,omitempty"`
+	Status          int    `json:"status,omitempty"`
+}
+
 // 获取角色列表
 func GetRoleList(ctx iris.Context) {
 	var resp app.PagerResponse
@@ -23,12 +30,20 @@ func GetRoleList(ctx iris.Context) {
 	}
 	// role_list
 	for _, r := range aros {
+		// 获取 role
 		ar, err := roleService.GetRole(r.RoleId)
 		if err != nil {
 			log.Info("get auth role fail rid:%d", r.RoleId)
 			log.Info(err)
 		} else {
-			resp.Data = append(resp.Data, ar)
+			var roleInfo = RespRoleInfo{
+				Id:              ar.Id,
+				RoleName:        ar.RoleName,
+				RoleDescription: ar.RoleDescription,
+				Status:          ar.Status,
+			}
+			// 添加到 Data[]
+			resp.Data = append(resp.Data, roleInfo)
 		}
 	}
 

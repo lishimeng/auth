@@ -15,15 +15,19 @@ type RoleInfo struct {
 	RoleName string `json:"roleName,omitempty"`
 }
 
+type UserInfo struct {
+	UserNo   string `json:"userNo,omitempty"`
+	UserName string `json:"userName,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Phone    string `json:"phone,omitempty"`
+	Status   int    `json:"status,omitempty"`
+	UserId   int    `json:"userId,omitempty"`
+}
+
 type UserInfoResp struct {
 	app.Response
-	UserNo   string     `json:"userNo,omitempty"`
-	UserName string     `json:"userName,omitempty"`
-	Email    string     `json:"email,omitempty"`
-	Phone    string     `json:"phone,omitempty"`
-	Status   int        `json:"status,omitempty"`
-	UserId   int        `json:"userId,omitempty"`
-	Roles    []RoleInfo `json:"roles,omitempty"`
+	UserInfo
+	Roles []RoleInfo `json:"roles,omitempty"`
 }
 
 // 获取用户列表
@@ -64,9 +68,18 @@ func GetUserList(ctx iris.Context) {
 		u, err := userService.GetUser(auo.UserId)
 		if err != nil {
 			log.Debug("get org users failed uid:%d", auo.UserId)
-			continue
+			log.Info(err)
+		} else {
+			var userInfo = UserInfo{
+				UserNo:   u.UserNo,
+				UserName: u.UserName,
+				Email:    u.Email,
+				Phone:    u.Phone,
+				Status:   u.Status,
+				UserId:   u.Id,
+			}
+			page.Data = append(page.Data, userInfo)
 		}
-		page.Data = append(page.Data, u)
 	}
 
 	resp.Pager = page
