@@ -1,6 +1,7 @@
 package authUserApi
 
 import (
+	"strconv"
 	"strings"
 	"time"
 
@@ -131,13 +132,19 @@ func UpdateUserRoles(ctx iris.Context) {
 	}
 	// 获取 roleId 列表： strings --> list[]
 	roleList := strings.Split(req.RoleIds, ",")
-	for role := range roleList {
+	log.Debug(roleList)
+	for _, role := range roleList {
 		var ur model.AuthUserRoles
-		ur.RoleId = role
-		ur.UserId = uid
-		ur.CreateTime = time.Now()
-		// add user_role
-		userRolesService.AddUserRole(ur)
+		ur.RoleId, err = strconv.Atoi(role)
+		if err != nil {
+			log.Debug("can't transfer string to int")
+		}
+		if ur.RoleId != 0 {
+			ur.UserId = uid
+			ur.CreateTime = time.Now()
+			// add user_role
+			userRolesService.AddUserRole(ur)
+		}
 	}
 
 	log.Debug("update user roles success, id:%d", uid)

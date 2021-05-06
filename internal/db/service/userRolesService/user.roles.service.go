@@ -11,7 +11,7 @@ func DeleteUserRoles(aur model.AuthUserRoles) (err error) {
 	err = app.GetOrm().Transaction(func(ctx persistence.OrmContext) (e error) {
 		var cols []string
 		cols = append(cols, "UserId")
-		e = repo.DeleteUserRole(aur, cols...)
+		e = repo.DeleteUserRole(&aur, cols...)
 		return
 	})
 	return
@@ -19,7 +19,7 @@ func DeleteUserRoles(aur model.AuthUserRoles) (err error) {
 
 func AddUserRole(u model.AuthUserRoles) (err error) {
 	err = app.GetOrm().Transaction(func(ctx persistence.OrmContext) (e error) {
-		e = repo.AddUserRole(ctx, u)
+		e = repo.AddUserRole(ctx, &u)
 		if e != nil {
 			return
 		}
