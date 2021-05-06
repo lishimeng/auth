@@ -2,10 +2,10 @@ package api
 
 import (
 	"github.com/kataras/iris/v12"
+	"github.com/lishimeng/auth/internal/api/authRoleApi"
+	"github.com/lishimeng/auth/internal/api/authUserApi"
 	"github.com/lishimeng/auth/internal/api/tokenApi"
 	"github.com/lishimeng/auth/internal/api/userApi"
-	"github.com/lishimeng/auth/internal/authRoleApi"
-	"github.com/lishimeng/auth/internal/authUserApi"
 )
 
 func Route(app *iris.Application) {
