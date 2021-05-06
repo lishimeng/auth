@@ -23,3 +23,10 @@ func GetAuthRoleById(ctx persistence.OrmContext, rid int) (r model.AuthRole, err
 	err = ctx.Context.Read(&r)
 	return
 }
+
+func DelAuthUserRole(ctx persistence.OrmContext, aur model.AuthUserRoles) (err error) {
+
+	_, err = ctx.Context.Delete(aur)
+
+	return
+}
