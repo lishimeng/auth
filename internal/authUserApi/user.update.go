@@ -13,20 +13,27 @@ import (
 	"github.com/lishimeng/go-log"
 )
 
-// type UserRolesReq struct {
-// 	UserId  int    `json:"userId,omitempty"`
-// 	RoleIds string `json:"roleIds,omitempty"`
-// }
+type UserRolesReq struct {
+	RoleIds string `json:"roleIds,omitempty"`
+}
 
 // 修改用户状态
 func UpdateUserStatus(ctx iris.Context) {
 	log.Debug("update user status")
+	var req model.AuthUser
 	var resp app.Response
 
 	// userId、status(new)
 	uid := ctx.Params().GetIntDefault("id", 0)
-	status := ctx.URLParamIntDefault("status", 0)
-
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		log.Debug("req err")
+		log.Debug(err)
+		resp.Code = -1
+		resp.Message = "req err"
+		common.ResponseJSON(ctx, resp)
+		return
+	}
 	// check
 	if uid == 0 {
 		log.Debug("uid nil")
@@ -35,7 +42,7 @@ func UpdateUserStatus(ctx iris.Context) {
 		common.ResponseJSON(ctx, resp)
 		return
 	}
-	if status == 0 {
+	if req.Status == 0 {
 		log.Debug("status nil")
 		resp.Code = -1
 		resp.Message = "status nil"
@@ -44,7 +51,7 @@ func UpdateUserStatus(ctx iris.Context) {
 	}
 
 	// 修改用户状态
-	e := userService.UpdateUserStatusById(uid, status)
+	e := userService.UpdateUserStatusById(uid, req.Status)
 	if e != nil {
 		log.Debug("can't update user status")
 		resp.Code = -1
@@ -64,6 +71,7 @@ func UpdateUserInfo(ctx iris.Context) {
 	var req model.AuthUser
 	var resp app.PagerResponse
 
+	uid := ctx.Params().GetIntDefault("id", 0)
 	err := ctx.ReadJSON(&req)
 	if err != nil {
 		log.Debug("req err")
@@ -74,37 +82,8 @@ func UpdateUserInfo(ctx iris.Context) {
 		return
 	}
 
-	// check
-	if req.Id == 0 {
-		log.Debug("param id nil")
-		resp.Code = -1
-		resp.Message = "param id nil"
-		common.ResponseJSON(ctx, resp)
-		return
-	}
-	if len(req.UserNo) == 0 {
-		log.Debug("param userNo nil")
-		resp.Code = -1
-		resp.Message = "param userNo nil"
-		common.ResponseJSON(ctx, resp)
-		return
-	}
-	if len(req.UserName) == 0 {
-		log.Debug("param userName nil")
-		resp.Code = -1
-		resp.Message = "param userName nil"
-		common.ResponseJSON(ctx, resp)
-		return
-	}
-	if len(req.Email) == 0 {
-		log.Debug("param email nil")
-		resp.Code = -1
-		resp.Message = "param email nil"
-		common.ResponseJSON(ctx, resp)
-		return
-	}
-
 	//service.修改用户信息
+	req.Id = uid
 	e := userService.UpdateUserById(req)
 	if e != nil {
 		log.Debug("can't update user")
@@ -122,25 +101,26 @@ func UpdateUserInfo(ctx iris.Context) {
 // 修改用户角色
 func UpdateUserRoles(ctx iris.Context) {
 	log.Debug("update user roles")
+	var req UserRolesReq
 	var resp app.Response
 
 	// userId
 	uid := ctx.Params().GetIntDefault("id", 0)
 	// String roleIds
-	roleIds := ctx.URLParamDefault("roleIds", "")
-
-	// check
-	if len(roleIds) == 0 {
-		log.Debug("roleIds nil")
+	err := ctx.ReadJSON(&req)
+	if err != nil {
+		log.Debug("req err")
+		log.Debug(err)
 		resp.Code = -1
-		resp.Message = "roleIds nil"
+		resp.Message = "req err"
 		common.ResponseJSON(ctx, resp)
 		return
 	}
 
+	// 删除用户的所有角色
 	var aur model.AuthUserRoles
 	aur.UserId = uid
-	// 删除用户的所有角色
+	log.Debug("delete user role, uid:%d", uid)
 	e := userRolesService.DeleteUserRoles(aur)
 	if e != nil {
 		log.Debug("can't delete user role")
@@ -150,13 +130,13 @@ func UpdateUserRoles(ctx iris.Context) {
 		return
 	}
 	// 获取 roleId 列表： strings --> list[]
-	roleList := strings.Split(roleIds, ",")
+	roleList := strings.Split(req.RoleIds, ",")
 	for role := range roleList {
 		var ur model.AuthUserRoles
 		ur.RoleId = role
 		ur.UserId = uid
 		ur.CreateTime = time.Now()
-		// 新增 user_role
+		// add user_role
 		userRolesService.AddUserRole(ur)
 	}
 

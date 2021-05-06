@@ -29,20 +29,13 @@ func user(p iris.Party) {
 	p.Post("/sign_in_card", userApi.SignInCard)
 	p.Post("/logout", userApi.Logout)
 	p.Get("/info/{id}", userApi.GenUserInfo)
-	p.Post("/add", authUserApi.Add)
 
 	p.Post("/password/change", userApi.ChangePassword)
 	p.Post("/password/change", userApi.ChangePassword)
 	p.Post("/password/reset", userApi.ResetPassword)
-
-	p.Get("/", authUserApi.GetUserList)
-	p.Get("/{id}", authUserApi.GetUserInfo)
-	p.Put("/status/change/{id}", authUserApi.UpdateUserStatus)
-	p.Put("/{id}", authUserApi.UpdateUserInfo)
-	p.Put("/roles/change/{id}", authUserApi.UpdateUserRoles)
 }
 
-// auth_user
+// authUser
 func authUser(p iris.Party) {
 	p.Post("/add", authUserApi.Add)
 	p.Get("/", authUserApi.GetUserList)
@@ -52,7 +45,7 @@ func authUser(p iris.Party) {
 	p.Put("/roles/change/{id}", authUserApi.UpdateUserRoles)
 }
 
-// auth_roles
+// authRoles
 func authRoles(p iris.Party) {
-	p.Post("/", authRoleApi.GetRoleList)
+	p.Get("/", authRoleApi.GetRoleList)
 }
