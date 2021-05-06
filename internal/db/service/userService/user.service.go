@@ -112,3 +112,9 @@ func UpdateUserById(au model.AuthUser) (err error) {
 	})
 	return
 }
+func ChangePassword(u model.AuthUser, passwd string) (err error) {
+	ctx := app.GetOrm()
+	u.Password = passwd
+	err = repo.UpdateUserPassword(*ctx, &u)
+	return
+}
