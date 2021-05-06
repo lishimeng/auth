@@ -65,6 +65,9 @@ func (h *Handler) VerifyToken(signedToken string) (claims *Claims, success bool)
 	if success {
 		success = claims.VerifyIssuer(h.issuer, false)
 	}
+	if success {
+		success = claims.VerifyExpiresAt(time.Now().Unix(), true)
+	}
 	return
 }
 

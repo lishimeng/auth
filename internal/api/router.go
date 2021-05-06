@@ -20,7 +20,6 @@ func route(root iris.Party) {
 }
 
 func token(p iris.Party) {
-	p.Post("/gen", tokenApi.GenToken)
 	p.Get("/verify", tokenApi.VerifyToken)
 }
 

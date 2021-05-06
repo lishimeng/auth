@@ -43,10 +43,7 @@ func Gen(uid, oid int, loginType int32, expire time.Duration) (token Token, succ
 	return
 }
 
-func Verify(jwtStr string, forUid int) (success bool) {
-	c, success := jwtHandler.VerifyToken(jwtStr)
-	if success {
-		success = forUid == c.UID
-	}
+func Verify(jwtStr string) (claims *jwt.Claims, success bool) {
+	claims, success = jwtHandler.VerifyToken(jwtStr)
 	return
 }
