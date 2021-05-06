@@ -16,6 +16,7 @@ const (
 const (
 	RespCodeSuccess  = 200
 	RespCodeNotFound = 404
+	RespCodeNeedAuth = 401
 
 	RespCodeInternalError = 500
 )

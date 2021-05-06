@@ -9,14 +9,15 @@ import (
 
 func TestGenToken(t *testing.T) {
 
-	h := New([]byte("secret"), "https://doudou.me", time.Hour * 3 * 24)
+	h := New([]byte("secret"), "AAA.com", time.Hour * 3 * 24)
 	c, _, token, success := h.GenToken(TokenReq{
 		BaseToken: BaseToken{
-			UID: "U13413",
+			UID: 1234,
+			OID: 1,
 			Type: 1,
 		},
-		Audience:  "U13413",
-		Subject:   "https://doudou.me/xiaoha",
+		//Audience:  "U13413",
+		//Subject:   "AAA.com/user1",
 	})
 	fmt.Println(token)
 	fmt.Println(success)

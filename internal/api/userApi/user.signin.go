@@ -38,8 +38,9 @@ func SignIn(ctx iris.Context) {
 	} else {
 		resp.OrgId = auo.OrgId
 	}
+	// org -> cache
 	// 创建jwt
-	t, success := token.Gen(u.PkString(), 1, 0)
+	t, success := token.Gen(u.Id, auo.OrgId, 1, 0)
 	if !success {
 		log.Info("create jwt failed")
 		resp.Code = respcode.SignInFailed

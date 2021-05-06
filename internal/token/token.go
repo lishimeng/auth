@@ -17,10 +17,11 @@ func Init(handler jwt.Handler) {
 	jwtHandler = &handler
 }
 
-func Gen(uid string, loginType int32, expire time.Duration) (token Token, success bool) {
+func Gen(uid, oid int, loginType int32, expire time.Duration) (token Token, success bool) {
 
 	var req jwt.TokenReq
 	req.UID = uid
+	req.OID = oid
 	req.Type = loginType
 	if expire > 0 {
 		req.Expire = expire
@@ -42,12 +43,7 @@ func Gen(uid string, loginType int32, expire time.Duration) (token Token, succes
 	return
 }
 
-func Verify(jwtStr string, forUid string) (success bool) {
-	c, success := jwtHandler.VerifyToken(jwtStr)
-	if success {
-		if len(forUid) > 0 {
-			success = forUid == c.UID
-		}
-	}
+func Verify(jwtStr string) (claims *jwt.Claims, success bool) {
+	claims, success = jwtHandler.VerifyToken(jwtStr)
 	return
 }
