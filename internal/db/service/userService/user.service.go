@@ -4,6 +4,7 @@ import (
 	"time"
 
 	"github.com/lishimeng/app-starter"
+	"github.com/lishimeng/auth/internal/common"
 	"github.com/lishimeng/auth/internal/db/model"
 	"github.com/lishimeng/auth/internal/db/repo"
 	"github.com/lishimeng/auth/internal/password"
@@ -13,7 +14,7 @@ import (
 func AddUser(u *model.AuthUser) (err error) {
 	err = app.GetOrm().Transaction(func(ctx persistence.OrmContext) (e error) {
 		// save user
-		u.Status = 1 // TODO
+		u.Status = common.UserStatusActivate // TODO
 		e = repo.AddUser(ctx, u)
 		if e != nil {
 			return

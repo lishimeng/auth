@@ -2,9 +2,10 @@ package common
 
 import (
 	"fmt"
-	"github.com/kataras/iris/v12"
 	"math/rand"
 	"time"
+
+	"github.com/kataras/iris/v12"
 )
 
 const (
@@ -44,6 +45,11 @@ func RandomString(n int) string {
 	rand.Read(randBytes)
 	return fmt.Sprintf("%x", randBytes)
 }
+
+const (
+	UserStatusActivate   = 20
+	UserStatusDeActivate = 10
+)
 
 var letters = []rune("0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ!@#$%^&*()")
 

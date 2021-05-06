@@ -34,6 +34,7 @@ func Add(ctx iris.Context) {
 	var resp AddResp
 	var err error
 	err = ctx.ReadJSON(&req)
+	log.Info("add user req[]:", req)
 	if err != nil {
 		log.Info("req err")
 		return

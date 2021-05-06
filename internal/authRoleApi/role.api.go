@@ -18,7 +18,7 @@ type RespRoleInfo struct {
 // 获取角色列表
 func GetRoleList(ctx iris.Context) {
 	var resp app.PagerResponse
-	oid := ctx.Params().GetIntDefault("id", 0)
+	oid := 1
 	// org_roles
 	aros, err := roleService.GetOrgRoles(oid)
 	if err != nil {

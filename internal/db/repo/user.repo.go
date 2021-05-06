@@ -4,6 +4,7 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/auth/internal/db/model"
+	"github.com/lishimeng/go-log"
 	persistence "github.com/lishimeng/go-orm"
 )
 
@@ -39,6 +40,7 @@ func GetAuthUserOrg(ctx persistence.OrmContext, u model.AuthUser) (auo model.Aut
 func GetOrgUsers(oid int, page app.Pager) (p app.Pager, auos []model.AuthUserOrganization, err error) {
 	var qs = app.GetOrm().Context.QueryTable(new(model.AuthUserOrganization)).Filter("OrgId", oid)
 
+	log.Debug(qs)
 	sum, err := qs.Count()
 	if err != nil {
 		return
