@@ -1,28 +1,18 @@
-package roleApi
+package authRoleApi
 
 import (
 	"github.com/kataras/iris/v12"
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/auth/internal/common"
-	"github.com/lishimeng/auth/internal/db/model"
 	"github.com/lishimeng/auth/internal/db/service/roleService"
 	"github.com/lishimeng/go-log"
 )
 
-type Req struct {
-	Oid int `json:"oid,omitempty"`
-}
-
-type Resp struct {
-	app.Response
-	Jwt   string           `json:"jwt,omitempty"`
-	Roles []model.AuthRole `json:"roles,omitempty"`
-}
-
+// 获取角色列表
 func GetRoleList(ctx iris.Context) {
-	var resp Resp
+	var resp app.PagerResponse
 	oid := ctx.Params().GetIntDefault("id", 0)
-	//org_roles
+	// org_roles
 	aros, err := roleService.GetOrgRoles(oid)
 	if err != nil {
 		log.Info("get org role fail oid:%d", oid)
@@ -31,14 +21,14 @@ func GetRoleList(ctx iris.Context) {
 		common.ResponseJSON(ctx, resp)
 		return
 	}
-	//role_list
+	// role_list
 	for _, r := range aros {
 		ar, err := roleService.GetRole(r.RoleId)
 		if err != nil {
 			log.Info("get auth role fail rid:%d", r.RoleId)
 			log.Info(err)
 		} else {
-			resp.Roles = append(resp.Roles, ar)
+			resp.Data = append(resp.Data, ar)
 		}
 	}
 
