@@ -4,6 +4,8 @@ import (
 	"github.com/kataras/iris/v12"
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/auth/internal/common"
+	"github.com/lishimeng/auth/internal/jwt"
+	"github.com/lishimeng/go-log"
 )
 
 type Req struct {
@@ -20,7 +22,10 @@ type Resp struct {
 }
 
 func Logout(ctx iris.Context) {
-	ctx.GetHeader("")
+	var tok jwt.Claims
+	common.GetCtxToken(ctx, &tok)
+	log.Info("logout uid:%d, oid:%d", tok.UID, tok.OID)
+	// TODO
 	var resp app.Response
 	resp.Code = common.RespCodeSuccess
 	common.ResponseJSON(ctx, resp)
