@@ -59,6 +59,7 @@ func Add(ctx iris.Context) {
 	}
 
 	// 获取 roleId 列表： strings --> list[]
+	//
 	roleList := strings.Split(req.RoleIds, ",")
 	log.Info(roleList)
 	for _, role := range roleList {
