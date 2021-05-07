@@ -14,6 +14,10 @@ const (
 )
 
 const (
+	ContentBlank = ""
+)
+
+const (
 	RespCodeSuccess  = 200
 	RespCodeNotFound = 404
 	RespCodeNeedAuth = 401
