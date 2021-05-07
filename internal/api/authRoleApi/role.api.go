@@ -5,6 +5,7 @@ import (
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/auth/internal/common"
 	"github.com/lishimeng/auth/internal/db/service/roleService"
+	"github.com/lishimeng/auth/internal/jwt"
 	"github.com/lishimeng/go-log"
 )
 
@@ -19,19 +20,13 @@ type RespRoleInfo struct {
 func GetRoleList(ctx iris.Context) {
 	log.Info("get role list")
 	var resp app.PagerResponse
-	c, success := common.Authorization(ctx)
-	if !success {
-		log.Info("get claim err")
-		log.Info(success)
-		resp.Code = -1
-		resp.Message = "get claim err"
-		common.ResponseJSON(ctx, resp)
-		return
-	}
+	var tok jwt.Claims
+	common.GetCtxToken(ctx, &tok)
+
 	// org_roles
-	aros, err := roleService.GetOrgRoles(c.OID)
+	aros, err := roleService.GetOrgRoles(tok.OID)
 	if err != nil {
-		log.Info("get org role fail oid:%d", c.OID)
+		log.Info("get org role fail oid:%d", tok.OID)
 		log.Info(err)
 		resp.Code = common.RespCodeNotFound
 		common.ResponseJSON(ctx, resp)

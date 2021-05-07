@@ -7,6 +7,7 @@ import (
 	"github.com/lishimeng/auth/internal/db/repo"
 	"github.com/lishimeng/auth/internal/db/service/roleService"
 	"github.com/lishimeng/auth/internal/db/service/userService"
+	"github.com/lishimeng/auth/internal/jwt"
 	"github.com/lishimeng/go-log"
 )
 
@@ -36,25 +37,17 @@ func GetUserList(ctx iris.Context) {
 	var resp app.PagerResponse
 	var pageSize = ctx.URLParamIntDefault("pageSize", repo.DefaultPageSize)
 	var pageNo = ctx.URLParamIntDefault("pageNo", repo.DefaultPageNo)
-
-	c, success := common.Authorization(ctx)
-	if !success {
-		log.Info("get claim err")
-		log.Info(success)
-		resp.Code = -1
-		resp.Message = "get claim err"
-		common.ResponseJSON(ctx, resp)
-		return
-	}
+	var tok jwt.Claims
+	common.GetCtxToken(ctx, &tok)
 	page := app.Pager{
 		PageSize: pageSize,
 		PageNum:  pageNo,
 	}
 
 	// org_users
-	page, auos, err := repo.GetOrgUsers(c.OID, page)
+	page, auos, err := repo.GetOrgUsers(tok.OID, page)
 	if err != nil {
-		log.Debug("get org users failed oid:%d", c.OID)
+		log.Debug("get org users failed oid:%d", tok.OID)
 		log.Debug(err)
 		resp.Code = -1
 		resp.Message = "get org users failed"
