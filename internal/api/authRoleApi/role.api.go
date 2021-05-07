@@ -17,12 +17,21 @@ type RespRoleInfo struct {
 
 // 获取角色列表
 func GetRoleList(ctx iris.Context) {
+	log.Info("get role list")
 	var resp app.PagerResponse
-	oid := 1
+	c, success := common.Authorization(ctx)
+	if !success {
+		log.Info("get claim err")
+		log.Info(success)
+		resp.Code = -1
+		resp.Message = "get claim err"
+		common.ResponseJSON(ctx, resp)
+		return
+	}
 	// org_roles
-	aros, err := roleService.GetOrgRoles(oid)
+	aros, err := roleService.GetOrgRoles(c.OID)
 	if err != nil {
-		log.Info("get org role fail oid:%d", oid)
+		log.Info("get org role fail oid:%d", c.OID)
 		log.Info(err)
 		resp.Code = common.RespCodeNotFound
 		common.ResponseJSON(ctx, resp)
@@ -49,6 +58,4 @@ func GetRoleList(ctx iris.Context) {
 
 	resp.Code = common.RespCodeSuccess
 	common.ResponseJSON(ctx, resp)
-
-	return
 }
