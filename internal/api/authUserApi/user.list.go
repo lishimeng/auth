@@ -36,26 +36,25 @@ func GetUserList(ctx iris.Context) {
 	var resp app.PagerResponse
 	var pageSize = ctx.URLParamIntDefault("pageSize", repo.DefaultPageSize)
 	var pageNo = ctx.URLParamIntDefault("pageNo", repo.DefaultPageNo)
-	// orgId
-	var oid = 1
-	// c,success := ctx.Handlers().VerifyToken(ctx.URLParam("token"))
 
-	// if !success {
-	// 	log.Debug("verify failed")
-	// 	resp.Code = -1
-	// 	resp.Message = "verify failed"
-	// 	common.ResponseJSON(ctx, resp)
-	// 	return
-	// }
+	c, success := common.Authorization(ctx)
+	if !success {
+		log.Info("get claim err")
+		log.Info(success)
+		resp.Code = -1
+		resp.Message = "get claim err"
+		common.ResponseJSON(ctx, resp)
+		return
+	}
 	page := app.Pager{
 		PageSize: pageSize,
 		PageNum:  pageNo,
 	}
 
 	// org_users
-	page, auos, err := repo.GetOrgUsers(oid, page)
+	page, auos, err := repo.GetOrgUsers(c.OID, page)
 	if err != nil {
-		log.Debug("get org users failed oid:%d", oid)
+		log.Debug("get org users failed oid:%d", c.OID)
 		log.Debug(err)
 		resp.Code = -1
 		resp.Message = "get org users failed"
