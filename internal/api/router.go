@@ -2,6 +2,7 @@ package api
 
 import (
 	"github.com/kataras/iris/v12"
+	"github.com/kataras/iris/v12/middleware/recover"
 	"github.com/lishimeng/auth/internal/api/authRoleApi"
 	"github.com/lishimeng/auth/internal/api/authUserApi"
 	"github.com/lishimeng/auth/internal/api/tokenApi"
@@ -9,6 +10,7 @@ import (
 )
 
 func Route(app *iris.Application) {
+	app.Use(recover.New())
 	route(app.Party("/api"))
 }
 
@@ -26,11 +28,11 @@ func token(p iris.Party) {
 func user(p iris.Party) {
 	p.Post("/sign_in", userApi.SignIn)
 	p.Post("/sign_in_card", userApi.SignInCard)
-	p.Post("/logout", userApi.Logout)
+	p.Post("/logout", Authorization, userApi.Logout)
 	p.Get("/info/{id}", userApi.GenUserInfo)
 
 	p.Post("/password/change", userApi.ChangePassword)
-	p.Post("/password/change", userApi.ChangePassword)
+	p.Post("/password/change", userApi.ChangePasswordWithKey)
 	p.Post("/password/reset", userApi.ResetPassword)
 }
 
