@@ -39,7 +39,7 @@ func user(p iris.Party) {
 // authUser
 func authUser(p iris.Party) {
 	p.Post("/add", authUserApi.Add)
-	p.Get("/", authUserApi.GetUserList)
+	p.Get("/", Authorization, authUserApi.GetUserList)
 	p.Get("/{id}", authUserApi.GetUserInfo)
 	p.Put("/{id}", authUserApi.UpdateUserInfo)
 	p.Put("/status/change/{id}", authUserApi.UpdateUserStatus)
