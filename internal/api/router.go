@@ -42,8 +42,8 @@ func authUser(p iris.Party) {
 	p.Get("/", Authorization, authUserApi.GetUserList)
 	p.Get("/{id}", authUserApi.GetUserInfo)
 	p.Put("/{id}", authUserApi.UpdateUserInfo)
-	p.Put("/status/change/{id}", authUserApi.UpdateUserStatus)
-	p.Put("/roles/change/{id}", authUserApi.UpdateUserRoles)
+	p.Put("/{id}/status", authUserApi.UpdateUserStatus)
+	p.Put("/roles/change/{id}", authUserApi.UpdateUserRoles)  // deprecate
 }
 
 // authRoles

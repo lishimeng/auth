@@ -46,7 +46,7 @@ func GetAuthUserOrg(u model.AuthUser) (uo model.AuthUserOrganization, err error)
 }
 
 // 修改用户状态
-func UpdateUserStatusById(id, status int) (err error) {
+func UpdateUserStatus(id, status int) (err error) {
 	err = app.GetOrm().Transaction(func(ctx persistence.OrmContext) (e error) {
 		// 获取要修改的用户
 		u, e := GetUser(id)

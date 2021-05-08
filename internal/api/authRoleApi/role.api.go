@@ -85,6 +85,8 @@ func Add(ctx iris.Context) {
 		common.ResponseJSON(ctx, resp)
 		return
 	}
+	// TODO get user, compare org_id(user_org)
+	// TODO get role, compare org_id(role_org)
 
 	var ur = model.AuthUserRoles{
 		UserId:    req.Uid,

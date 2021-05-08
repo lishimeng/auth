@@ -18,10 +18,14 @@ type UserRolesReq struct {
 	RoleIds string `json:"roleIds,omitempty"`
 }
 
-// 修改用户状态
+type StatusReq struct {
+	Status int `json:"status"`
+}
+
+// UpdateUserStatus 修改用户状态
 func UpdateUserStatus(ctx iris.Context) {
 	log.Debug("update user status")
-	var req model.AuthUser
+	var req StatusReq
 	var resp app.Response
 
 	// userId、status(new)
@@ -30,7 +34,7 @@ func UpdateUserStatus(ctx iris.Context) {
 	if err != nil {
 		log.Debug("req err")
 		log.Debug(err)
-		resp.Code = -1
+		resp.Code = common.RespCodeInternalError
 		resp.Message = "req err"
 		common.ResponseJSON(ctx, resp)
 		return
@@ -38,25 +42,25 @@ func UpdateUserStatus(ctx iris.Context) {
 	// check
 	if uid == 0 {
 		log.Debug("uid nil")
-		resp.Code = -1
-		resp.Message = "uid nil"
+		resp.Code = common.RespCodeNotFound
+		resp.Message = common.RespMsgNotFount
 		common.ResponseJSON(ctx, resp)
 		return
 	}
 	if req.Status == 0 {
 		log.Debug("status nil")
-		resp.Code = -1
+		resp.Code = common.RespCodeSuccess // TODO ignore, if no param:status
 		resp.Message = "status nil"
 		common.ResponseJSON(ctx, resp)
 		return
 	}
 
 	// 修改用户状态
-	e := userService.UpdateUserStatusById(uid, req.Status)
+	e := userService.UpdateUserStatus(uid, req.Status)
 	if e != nil {
 		log.Debug("can't update user status")
-		resp.Code = -1
-		resp.Message = "create update fail"
+		resp.Code = common.RespCodeInternalError
+		resp.Message = "update status fail"
 		common.ResponseJSON(ctx, resp)
 		return
 	}
@@ -66,7 +70,7 @@ func UpdateUserStatus(ctx iris.Context) {
 	common.ResponseJSON(ctx, resp)
 }
 
-// 修改用户信息
+// UpdateUserInfo 修改用户信息
 func UpdateUserInfo(ctx iris.Context) {
 	log.Debug("update user")
 	var req model.AuthUser
@@ -99,7 +103,9 @@ func UpdateUserInfo(ctx iris.Context) {
 	common.ResponseJSON(ctx, resp)
 }
 
-// 修改用户角色
+// UpdateUserRoles 修改用户角色
+//
+// @deprecate
 func UpdateUserRoles(ctx iris.Context) {
 	log.Debug("update user roles")
 	var req UserRolesReq
@@ -143,7 +149,7 @@ func UpdateUserRoles(ctx iris.Context) {
 			ur.UserId = uid
 			ur.CreateTime = time.Now()
 			// add user_role
-			userRolesService.AddUserRole(ur)
+			_ = userRolesService.AddUserRole(&ur)
 		}
 	}
 
