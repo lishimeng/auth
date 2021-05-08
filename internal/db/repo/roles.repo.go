@@ -11,6 +11,17 @@ func GetAuthUserRolesByUser(ctx persistence.OrmContext, uid int) (aur []model.Au
 	return
 }
 
+func GetAuthUserRoleByUserAndRole(ctx persistence.OrmContext, uid int, rid int) (aur model.AuthUserRoles, err error) {
+	_, err = ctx.Context.QueryTable(new(model.AuthUserRoles)).Filter("UserId", uid).Filter("RoleId", rid).All(&aur)
+	return
+}
+
+func GetAuthUserRoleById(ctx persistence.OrmContext, id int) (aur model.AuthUserRoles, err error) {
+	aur.Id = id
+	err = ctx.Context.Read(&aur)
+	return
+}
+
 func GetAuthRolesByOrg(ctx persistence.OrmContext, oid int) (aro []model.AuthRoleOrganization, err error) {
 	cond := orm.NewCondition()
 	cond1 := cond.And("OrgId", oid)

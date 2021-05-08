@@ -57,3 +57,9 @@ func GetCtxToken(ctx iris.Context, token *jwt.Claims) {
 		token.Type = v.Type
 	}
 }
+
+func GetOrg(ctx iris.Context) int {
+	var tok jwt.Claims
+	GetCtxToken(ctx, &tok)
+	return tok.OID
+}
