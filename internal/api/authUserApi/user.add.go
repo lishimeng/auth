@@ -59,7 +59,7 @@ func Add(ctx iris.Context) {
 	}
 
 	// 获取 roleId 列表： strings --> list[]
-	//
+	// TODO 删除这部分,不在创建用户时添加权限
 	roleList := strings.Split(req.RoleIds, ",")
 	log.Info(roleList)
 	for _, role := range roleList {
@@ -69,7 +69,7 @@ func Add(ctx iris.Context) {
 			ur.UserId = u.Id
 			ur.CreateTime = time.Now()
 			// add user_role
-			err = userRolesService.AddUserRole(ur)
+			err = userRolesService.AddUserRole(&ur)
 		}
 		if err != nil {
 			log.Info(err)

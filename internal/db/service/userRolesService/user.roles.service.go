@@ -17,9 +17,9 @@ func DeleteUserRoles(aur model.AuthUserRoles) (err error) {
 	return
 }
 
-func AddUserRole(u model.AuthUserRoles) (err error) {
+func AddUserRole(u *model.AuthUserRoles) (err error) {
 	err = app.GetOrm().Transaction(func(ctx persistence.OrmContext) (e error) {
-		e = repo.AddUserRole(ctx, &u)
+		e = repo.AddUserRole(ctx, u)
 		if e != nil {
 			return
 		}

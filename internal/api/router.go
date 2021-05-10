@@ -26,10 +26,10 @@ func token(p iris.Party) {
 }
 
 func user(p iris.Party) {
-	p.Post("/sign_in", userApi.SignIn)
-	p.Post("/sign_in_card", userApi.SignInCard)
-	p.Post("/logout", Authorization, userApi.Logout)
-	p.Get("/info/{id}", userApi.GenUserInfo)
+	p.Post("/sign_in", userApi.SignIn) // 登录
+	p.Post("/sign_in_card", userApi.SignInCard) // 智能卡登录
+	p.Post("/logout", Authorization, userApi.Logout) // 退出
+	p.Get("/info/{id}", userApi.GenUserInfo) // 用户信息
 
 	p.Post("/password/change", userApi.ChangePassword)
 	p.Post("/password/change", userApi.ChangePasswordWithKey)
@@ -38,15 +38,18 @@ func user(p iris.Party) {
 
 // authUser
 func authUser(p iris.Party) {
-	p.Post("/add", authUserApi.Add)
-	p.Get("/", Authorization, authUserApi.GetUserList)
-	p.Get("/{id}", authUserApi.GetUserInfo)
-	p.Put("/{id}", authUserApi.UpdateUserInfo)
-	p.Put("/status/change/{id}", authUserApi.UpdateUserStatus)
-	p.Put("/roles/change/{id}", authUserApi.UpdateUserRoles)
+	p.Post("/add", Authorization, authUserApi.Add) // 添加用户
+	p.Get("/", Authorization, authUserApi.GetUserList) // 用户列表
+	p.Get("/{id}", Authorization, authUserApi.GetUserInfo) // 用户信息id
+	p.Put("/{id}", Authorization, authUserApi.UpdateUserInfo) // 更新用户
+	p.Put("/{id}/status", Authorization, authUserApi.UpdateUserStatus) // 改用户状态
+	p.Put("/roles/change/{id}", Authorization, authUserApi.UpdateUserRoles)  // deprecate
 }
 
 // authRoles
 func authRoles(p iris.Party) {
-	p.Get("/", authRoleApi.GetRoleList)
+	p.Get("/", authRoleApi.GetRoleList) // 角色列表
+	p.Post("/", Authorization, authRoleApi.Add) // 添加角色
+	p.Delete("/{id}", Authorization, authRoleApi.Del) // 删除角色(id:角色关系表id)
+	p.Delete("/{uid}/{rid}", Authorization, authRoleApi.DelUserRole) // 删除用户的角色,需要通过user和role查询
 }
