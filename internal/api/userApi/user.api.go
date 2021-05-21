@@ -9,16 +9,17 @@ import (
 )
 
 type Req struct {
-	Uid      int `json:"uid,omitempty"`
+	Uid       int    `json:"uid,omitempty"`
 	LoginName string `json:"loginName,omitempty"`
-	Password string `json:"password,omitempty"`
+	Password  string `json:"password,omitempty"`
 }
 
 type Resp struct {
 	app.Response
-	Jwt string `json:"jwt,omitempty"`
-	OrgId int `json:"orgId,omitempty"`
-	Roles []int `json:"roles,omitempty"`
+	Jwt   string `json:"jwt,omitempty"`
+	Uid   int    `json:"uid,omitempty"`
+	OrgId int    `json:"orgId,omitempty"`
+	Roles []int  `json:"roles,omitempty"`
 }
 
 func Logout(ctx iris.Context) {

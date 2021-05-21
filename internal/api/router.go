@@ -22,7 +22,7 @@ func route(root iris.Party) {
 }
 
 func token(p iris.Party) {
-	p.Get("/verify", tokenApi.VerifyToken)
+	p.Post("/verify", tokenApi.VerifyToken)
 }
 
 func user(p iris.Party) {

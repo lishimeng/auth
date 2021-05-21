@@ -68,6 +68,7 @@ func SignIn(ctx iris.Context) {
 
 	resp.Code = common.RespCodeSuccess
 	resp.Jwt = t.Jwt
+	resp.Uid = u.Id
 	common.ResponseJSON(ctx, resp)
 
 }
