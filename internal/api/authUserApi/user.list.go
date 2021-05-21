@@ -28,7 +28,7 @@ type UserInfo struct {
 type UserInfoResp struct {
 	app.Response
 	UserInfo
-	Roles []RoleInfo `json:"roles,omitempty"`
+	Roles []int `json:"roles,omitempty"`
 }
 
 // 获取用户列表
@@ -114,8 +114,8 @@ func GetUserInfo(ctx iris.Context) {
 		log.Info(err)
 	} else {
 		for _, r := range aurs {
-			var role RoleInfo
-			role.RoleId = r.RoleId
+			var role int
+			role = r.RoleId
 			resp.Roles = append(resp.Roles, role)
 		}
 	}
