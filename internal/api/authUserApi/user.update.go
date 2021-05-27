@@ -22,6 +22,13 @@ type StatusReq struct {
 	Status int `json:"status"`
 }
 
+type UpdateUserReq struct {
+	UserName string `json:"userName,omitempty"`
+	UserNo   string `json:"userNo,omitempty"`
+	Email    string `json:"email,omitempty"`
+	Phone    string `json:"phone,omitempty"`
+}
+
 // UpdateUserStatus 修改用户状态
 func UpdateUserStatus(ctx iris.Context) {
 	log.Debug("update user status")
@@ -72,15 +79,15 @@ func UpdateUserStatus(ctx iris.Context) {
 
 // UpdateUserInfo 修改用户信息
 func UpdateUserInfo(ctx iris.Context) {
-	log.Debug("update user")
-	var req model.AuthUser
+	log.Info("update user")
+	var req UpdateUserReq
 	var resp app.PagerResponse
 
 	uid := ctx.Params().GetIntDefault("id", 0)
 	err := ctx.ReadJSON(&req)
 	if err != nil {
-		log.Debug("req err")
-		log.Debug(err)
+		log.Info("req err")
+		log.Info(err)
 		resp.Code = -1
 		resp.Message = "req err"
 		common.ResponseJSON(ctx, resp)
@@ -88,17 +95,26 @@ func UpdateUserInfo(ctx iris.Context) {
 	}
 
 	//service.修改用户信息
-	req.Id = uid
-	e := userService.UpdateUserById(req)
+	pk := model.Pk{
+		Id: uid,
+	}
+	au := model.AuthUser{
+		Pk:       pk,
+		UserNo:   req.UserNo,
+		UserName: req.UserName,
+		Email:    req.Email,
+		Phone:    req.Phone,
+	}
+	e := userService.UpdateUserById(au)
 	if e != nil {
-		log.Debug("can't update user")
+		log.Info("can't update user")
 		resp.Code = -1
 		resp.Message = "create update fail"
 		common.ResponseJSON(ctx, resp)
 		return
 	}
 
-	log.Debug("update user success, id:%d", req.Id)
+	log.Info("update user success, id:%d", uid)
 	resp.Code = common.RespCodeSuccess
 	common.ResponseJSON(ctx, resp)
 }
