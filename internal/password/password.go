@@ -86,7 +86,7 @@ func RefreshPasswordKey() {
 		log.Info("old cache not exist")
 	} else {
 		rsaOldKey = oldCert.Pri
-		rsaOldPub =  oldCert.Pub
+		rsaOldPub = oldCert.Pub
 	}
 
 	privateKey, err := rsa.GenerateKey(rand.Reader, common.CacheRsaBits)

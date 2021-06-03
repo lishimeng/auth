@@ -21,4 +21,3 @@ func SignIn(name, plaintext string) (u model.AuthUser, err error) {
 	}
 	return
 }
-

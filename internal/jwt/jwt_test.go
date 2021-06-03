@@ -9,11 +9,11 @@ import (
 
 func TestGenToken(t *testing.T) {
 
-	h := New([]byte("secret"), "AAA.com", time.Hour * 3 * 24)
+	h := New([]byte("secret"), "AAA.com", time.Hour*3*24)
 	c, _, token, success := h.GenToken(TokenReq{
 		BaseToken: BaseToken{
-			UID: 1234,
-			OID: 1,
+			UID:  1234,
+			OID:  1,
 			Type: 1,
 		},
 		//Audience:  "U13413",

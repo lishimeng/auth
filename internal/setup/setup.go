@@ -32,7 +32,7 @@ func setupToken(_ context.Context) (err error) {
 func setupRefreshKey(ctx context.Context) (err error) {
 
 	go func() {
-		var d = time.Minute*21
+		var d = time.Minute * 21
 		var t = time.NewTimer(d)
 		defer func() {
 			t.Stop()

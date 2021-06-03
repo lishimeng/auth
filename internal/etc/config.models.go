@@ -6,7 +6,7 @@ type Configuration struct {
 	Web     web
 	Token   token
 	Redis   redis
-	Db  db
+	Db      db
 }
 
 type web struct {
@@ -20,10 +20,10 @@ type token struct {
 }
 
 type redis struct {
-	Enable bool
-	Addr string
+	Enable   bool
+	Addr     string
 	Password string
-	Db int
+	Db       int
 }
 
 type db struct {
@@ -34,4 +34,3 @@ type db struct {
 	Database string
 	Ssl      string
 }
-
