@@ -11,10 +11,10 @@ import (
 	persistence "github.com/lishimeng/go-orm"
 )
 
-func AddUser(u *model.AuthUser) (err error) {
+func AddUser(u *model.AuthUser) (uid int64, err error) {
 	err = app.GetOrm().Transaction(func(ctx persistence.OrmContext) (e error) {
 
-		e = repo.AddUser(ctx, u)
+		uid, e = repo.AddUser(ctx, u)
 		log.Info(u.CreateTime)
 		if e != nil {
 			return
@@ -117,5 +117,18 @@ func ChangePassword(u model.AuthUser, passwd string) (err error) {
 	ctx := app.GetOrm()
 	u.Password = passwd
 	err = repo.UpdateUserPassword(*ctx, &u)
+	return
+}
+
+//
+func AddUserOrg(auo *model.AuthUserOrganization) (err error) {
+	err = app.GetOrm().Transaction(func(ctx persistence.OrmContext) (e error) {
+		e = repo.AddUserOrg(ctx, auo)
+		if e != nil {
+			return
+		}
+		return e
+	})
+
 	return
 }

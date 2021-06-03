@@ -21,8 +21,8 @@ func GetAuthUserById(ctx persistence.OrmContext, uid int) (u model.AuthUser, err
 	return
 }
 
-func AddUser(ctx persistence.OrmContext, u *model.AuthUser) (err error) {
-	_, err = ctx.Context.Insert(u)
+func AddUser(ctx persistence.OrmContext, u *model.AuthUser) (uid int64, err error) {
+	uid, err = ctx.Context.Insert(u)
 	return
 }
 
@@ -73,5 +73,9 @@ func UpdateUserStatus(au model.AuthUser, cols ...string) (err error) {
 
 func UpdateUserInfo(au model.AuthUser, cols ...string) (err error) {
 	_, err = app.GetOrm().Context.Update(&au, cols...)
+	return
+}
+func AddUserOrg(ctx persistence.OrmContext, auo *model.AuthUserOrganization) (err error) {
+	_, err = ctx.Context.Insert(auo)
 	return
 }

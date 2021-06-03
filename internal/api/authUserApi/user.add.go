@@ -1,11 +1,14 @@
 package authUserApi
 
 import (
+	"strconv"
+
 	"github.com/kataras/iris/v12"
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/auth/internal/common"
 	"github.com/lishimeng/auth/internal/db/model"
 	"github.com/lishimeng/auth/internal/db/service/userService"
+	"github.com/lishimeng/auth/internal/jwt"
 	"github.com/lishimeng/auth/internal/respcode"
 	"github.com/lishimeng/go-log"
 )
@@ -26,6 +29,9 @@ func Add(ctx iris.Context) {
 	var resp app.Response
 	var err error
 
+	var tok jwt.Claims
+	common.GetCtxToken(ctx, &tok)
+
 	err = ctx.ReadJSON(&req)
 	if err != nil {
 		log.Info("req err")
@@ -44,10 +50,28 @@ func Add(ctx iris.Context) {
 		TableChangeInfo: ut,
 	}
 
-	// 新增
-	err = userService.AddUser(&u)
+	// 新增、get_new_uid
+	uid, err := userService.AddUser(&u)
 	if err != nil {
 		resp.Code = respcode.AddUserFailed
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+
+	str := strconv.FormatInt(uid, 10)
+	userId, err := strconv.Atoi(str)
+	if err != nil {
+		log.Info("strconv int64 err")
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+	auo := model.AuthUserOrganization{
+		UserId: userId,
+		OrgId:  tok.OID,
+	}
+
+	err = userService.AddUserOrg(&auo)
+	if err != nil {
 		common.ResponseJSON(ctx, resp)
 		return
 	}
