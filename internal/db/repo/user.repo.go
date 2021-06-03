@@ -4,7 +4,6 @@ import (
 	"github.com/astaxie/beego/orm"
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/auth/internal/db/model"
-	"github.com/lishimeng/go-log"
 	persistence "github.com/lishimeng/go-orm"
 )
 
@@ -37,16 +36,29 @@ func GetAuthUserOrg(ctx persistence.OrmContext, u model.AuthUser) (auo model.Aut
 	return
 }
 
-func GetOrgUsers(oid int, page app.Pager) (p app.Pager, auos []model.AuthUserOrganization, err error) {
-	var qs = app.GetOrm().Context.QueryTable(new(model.AuthUserOrganization)).Filter("OrgId", oid)
+func GetOrgUsers(oid int, page app.Pager, userNo string, status int) (p app.Pager, auos []model.AuthUserOrganizationV, err error) {
 
-	log.Debug(qs)
+	//筛选项
+	cond := orm.NewCondition()
+	if len(userNo) > 0 {
+		cond = cond.Or("UserNo", userNo)
+	}
+	if status > 0 {
+		cond = cond.And("Status", status)
+	}
+
+	cond = cond.And("orgId", oid)
+	//sum
+	var qs = app.GetOrm().Context.QueryTable(new(model.AuthUserOrganizationV)).SetCond(cond)
+
 	sum, err := qs.Count()
 	if err != nil {
 		return
 	}
+
 	page.TotalPage = calcTotalPage(page, sum)
-	_, err = qs.OrderBy("UserId").Offset(calcPageOffset(page)).Limit(page.PageSize).All(&auos)
+	//result_set
+	_, err = qs.OrderBy("Id").Offset(calcPageOffset(page)).Limit(page.PageSize).SetCond(cond).All(&auos)
 	if err != nil {
 		return
 	}

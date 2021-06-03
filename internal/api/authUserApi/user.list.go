@@ -37,6 +37,9 @@ func GetUserList(ctx iris.Context) {
 	var resp app.PagerResponse
 	var pageSize = ctx.URLParamIntDefault("pageSize", repo.DefaultPageSize)
 	var pageNo = ctx.URLParamIntDefault("pageNo", repo.DefaultPageNo)
+	var userNo = ctx.URLParamDefault("userNo", "")
+	var status = ctx.URLParamIntDefault("status", 0)
+
 	var tok jwt.Claims
 	common.GetCtxToken(ctx, &tok)
 	page := app.Pager{
@@ -45,7 +48,7 @@ func GetUserList(ctx iris.Context) {
 	}
 
 	// org_users
-	page, auos, err := repo.GetOrgUsers(tok.OID, page)
+	page, auos, err := repo.GetOrgUsers(tok.OID, page, userNo, status)
 	if err != nil {
 		log.Debug("get org users failed oid:%d", tok.OID)
 		log.Debug(err)
@@ -57,21 +60,14 @@ func GetUserList(ctx iris.Context) {
 
 	// user_list
 	for _, auo := range auos {
-		u, err := userService.GetUser(auo.UserId)
-		if err != nil {
-			log.Debug("get org users failed uid:%d", auo.UserId)
-			log.Info(err)
-		} else {
-			var userInfo = UserInfo{
-				UserNo:   u.UserNo,
-				UserName: u.UserName,
-				Email:    u.Email,
-				Phone:    u.Phone,
-				Status:   u.Status,
-				UserId:   u.Id,
-			}
-			page.Data = append(page.Data, userInfo)
-		}
+		page.Data = append(page.Data, UserInfo{
+			UserNo:   auo.UserNo,
+			UserName: auo.UserName,
+			Email:    auo.Email,
+			Phone:    auo.Phone,
+			Status:   auo.Status,
+			UserId:   auo.Id,
+		})
 	}
 
 	resp.Pager = page
