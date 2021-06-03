@@ -3,6 +3,8 @@ package main
 import (
 	"context"
 	"fmt"
+	"time"
+
 	"github.com/astaxie/beego/orm"
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/app-starter/cache"
@@ -14,9 +16,9 @@ import (
 	"github.com/lishimeng/auth/internal/setup"
 	"github.com/lishimeng/go-log"
 	persistence "github.com/lishimeng/go-orm"
-	"time"
+
+	_ "github.com/lib/pq"
 )
-import _ "github.com/lib/pq"
 
 func main() {
 	orm.Debug = true
@@ -63,16 +65,17 @@ func _main() (err error) {
 		}
 
 		redisOpts := cache.RedisOptions{
-			Addr: etc.Config.Redis.Addr,
+			Addr:     etc.Config.Redis.Addr,
 			Password: etc.Config.Redis.Password,
 		}
 		cacheOpts := cache.Options{
 			MaxSize: 10000,
-			Ttl:     time.Hour*24,
+			Ttl:     time.Hour * 24,
 		}
 		builder.EnableDatabase(dbConfig.Build(),
 			new(model.AuthUser),
 			new(model.AuthUserOrganization),
+			new(model.AuthUserOrganizationV),
 			new(model.AuthRoleOrganization),
 			new(model.AuthOrganization),
 			new(model.AuthUserRoles),
