@@ -12,7 +12,7 @@ import (
 )
 
 type JwtCache struct {
-	Uid int
+	Uid   int
 	OrgId int
 }
 

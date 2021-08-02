@@ -89,9 +89,9 @@ func Add(ctx iris.Context) {
 	// TODO get role, compare org_id(role_org)
 
 	var ur = model.AuthUserRoles{
-		UserId:    req.Uid,
-		RoleId:    req.Rid,
-		OrgId:     orgId,
+		UserId: req.Uid,
+		RoleId: req.Rid,
+		OrgId:  orgId,
 	}
 	err = userRolesService.AddUserRole(&ur)
 	if err != nil {

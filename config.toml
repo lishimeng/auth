@@ -13,14 +13,14 @@ secret = "2lP2ybr5c3ZKjH2SlZk7krbrv8T9eFxQ"
 
 [redis]
 enable = false
-addr = "192.168.1.76:16379"
+addr = "192.168.10.76:16379"
 password = "redisUAT"
 db = 0
 
 [db]
 user = "postgres"
 password = "postgres"
-host = "192.168.1.252"
+host = "192.168.10.252"
 port = 5432
 database = "lab_mgt_saas"
 ssl = "disable" #require/verify-full/verify-ca/disable

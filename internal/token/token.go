@@ -7,7 +7,7 @@ import (
 
 type Token struct {
 	jwt.Claims
-	Jwt string `json:"jwt"`
+	Jwt    string        `json:"jwt"`
 	Expire time.Duration `json:"-"`
 }
 

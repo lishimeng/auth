@@ -12,7 +12,7 @@ func TestVerify(t *testing.T) {
 	var issuer = "thingple.com"
 	var testStr = ""
 	Init(jwt.New([]byte(secret), issuer, time.Hour*time.Duration(expire)))
-	v, suc := Gen(1,2,3,time.Duration(0))
+	v, suc := Gen(1, 2, 3, time.Duration(0))
 	if !suc {
 		t.Fatal("gen token failed")
 	}
