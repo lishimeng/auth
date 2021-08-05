@@ -32,8 +32,9 @@ func user(p iris.Party) {
 	p.Get("/info/{id}", userApi.GenUserInfo)         // 用户信息
 
 	p.Post("/password/change", userApi.ChangePassword)
-	p.Post("/password/change", userApi.ChangePasswordWithKey)
-	p.Post("/password/reset", userApi.ResetPassword)
+	p.Post("/password/reset", userApi.ResetPwd)
+	//p.Post("/password/change", userApi.ChangePasswordWithKey)
+	//p.Post("/password/reset", userApi.ResetPassword)
 }
 
 // authUser
