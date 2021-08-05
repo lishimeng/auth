@@ -197,3 +197,57 @@ func ResetPassword(ctx iris.Context) {
 	resp.Password = plainPassword
 	common.ResponseJSON(ctx, resp)
 }
+
+// ResetPwd
+/*
+
+管理员重置密码
+
+*/
+func ResetPwd(ctx iris.Context) {
+
+	var err error
+	var req PasswordResetReq
+	var resp PasswordResetResp
+	err = ctx.ReadJSON(&req)
+	if err != nil {
+		log.Info("read param fail")
+		log.Info(err)
+		resp.Code = common.RespCodeInternalError
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+
+	// gen random passwd
+	u, err := userService.GetUser(req.Uid)
+	if err != nil {
+		log.Info("unknown uid:%d", req.Uid)
+		log.Info(err)
+		resp.Code = common.RespCodeNotFound
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+	var plainPassword = common.RandTxt(12)
+	newPasswd, err := password.Generate(u, plainPassword)
+	if err != nil {
+		log.Info("gen password failed")
+		log.Info(err)
+		resp.Code = common.RespCodeInternalError
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+	// change passwd
+	err = userService.ChangePassword(u, newPasswd)
+	if err != nil {
+		log.Info("update password failed")
+		log.Info(err)
+		resp.Code = common.RespCodeInternalError
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+
+	resp.Code = common.RespCodeSuccess
+	resp.Password = plainPassword
+	common.ResponseJSON(ctx, resp)
+}
+
