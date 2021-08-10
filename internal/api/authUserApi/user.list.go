@@ -9,6 +9,7 @@ import (
 	"github.com/lishimeng/auth/internal/db/service/userService"
 	"github.com/lishimeng/auth/internal/jwt"
 	"github.com/lishimeng/go-log"
+	"time"
 )
 
 type RoleInfo struct {
@@ -23,6 +24,7 @@ type UserInfo struct {
 	Phone    string `json:"phone,omitempty"`
 	Status   int    `json:"status,omitempty"`
 	UserId   int    `json:"userId,omitempty"`
+	Ctime	 time.Time `json:"ctime,omitempty"`
 }
 
 type UserInfoResp struct {
@@ -102,6 +104,7 @@ func GetUserInfo(ctx iris.Context) {
 	resp.Status = u.Status
 	resp.Phone = u.Phone
 	resp.Email = u.Email
+	resp.Ctime = u.CreateTime
 
 	// role_list
 	aurs, err := roleService.GetUserRoles(u.Id)

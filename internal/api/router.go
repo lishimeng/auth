@@ -49,7 +49,7 @@ func authUser(p iris.Party) {
 
 // authRoles
 func authRoles(p iris.Party) {
-	p.Get("/", authRoleApi.GetRoleList)                              // 角色列表
+	p.Get("/", Authorization, authRoleApi.GetRoleList)                              // 角色列表
 	p.Post("/", Authorization, authRoleApi.Add)                      // 添加角色
 	p.Delete("/{id}", Authorization, authRoleApi.Del)                // 删除角色(id:角色关系表id)
 	p.Delete("/{uid}/{rid}", Authorization, authRoleApi.DelUserRole) // 删除用户的角色,需要通过user和role查询
