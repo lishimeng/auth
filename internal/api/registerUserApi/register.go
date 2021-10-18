@@ -1,4 +1,4 @@
-package authUserApi
+package registerUserApi
 
 import (
 	"github.com/kataras/iris/v12"
@@ -6,45 +6,63 @@ import (
 	"github.com/lishimeng/auth/internal/common"
 	"github.com/lishimeng/auth/internal/db/model"
 	"github.com/lishimeng/auth/internal/db/service/userService"
-	"github.com/lishimeng/auth/internal/jwt"
 	"github.com/lishimeng/auth/internal/respcode"
 	"github.com/lishimeng/go-log"
 )
 
-type AddReq struct {
+type RegisterReq struct {
 	UserNo   string `json:"userNo,omitempty"`
 	UserName string `json:"userName,omitempty"`
 	Email    string `json:"email,omitempty"`
 	Phone    string `json:"phone,omitempty"`
 	Password string `json:"password,omitempty"`
 	Status   int    `json:"status,omitempty"`
+	OrgId    int    `json:"orgId,omitempty"`
+	code     string `json:"code,omitempty"`
+	imgCode  string `json:"imgCode,omitempty"`
 }
 
-type AddResp struct {
+type RegisterResp struct {
 	Uid int `json:"uid,omitempty"`
 	app.Response
 }
 
-// 新增用户
-func Add(ctx iris.Context) {
-	log.Debug("add user")
-	var req AddReq
-	var resp AddResp
+func Register(ctx iris.Context) {
+	log.Debug("Register user")
+	var req RegisterReq
+	var resp RegisterResp
 	var err error
-
-	var tok jwt.Claims
-	common.GetCtxToken(ctx, &tok)
 
 	err = ctx.ReadJSON(&req)
 	if err != nil {
-		log.Info("req err")
+		log.Info("Wrong request parameters.")
 		resp.Code = respcode.AddUserFailed
-		resp.Message = "Add User Failed"
+		resp.Message = "Wrong request parameters."
+		common.ResponseJSON(ctx, resp)
 		return
 	}
+	if !(req.OrgId > 0 && len(req.UserNo) > 0 &&
+		len(req.UserName) > 0 && len(req.Email) > 0 &&
+		len(req.Password) > 0) {
+		log.Info("Parameter is missing.")
+		resp.Code = respcode.AddUserFailed
+		resp.Message = "Parameter is missing."
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+	// 判断 邮件验证码
+	isCode, err := ModifyMailCode(req.Email, req.code)
+	if err != nil || !isCode {
+		log.Info("Mail verification code has expired.")
+		resp.Code = respcode.AddUserFailed
+		resp.Message = "Mail verification code has expired."
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+	// TODO 判断 图片验证码
 
 	ut := model.TableChangeInfo{
-		Status: req.Status,
+		Status: common.UserStatusActivate,
 	}
 	u := model.AuthUser{
 		UserNo:          req.UserNo,
@@ -55,24 +73,24 @@ func Add(ctx iris.Context) {
 		TableChangeInfo: ut,
 	}
 
-	// 新增、get_new_uid
+	// 新增 get_new_uid
 	_, err = userService.AddUser(&u)
 	if err != nil {
 		resp.Code = respcode.AddUserFailed
-		resp.Message = "Add User Failed"
+		resp.Message = "Register Failed. User ID or Email already exists."
 		common.ResponseJSON(ctx, resp)
 		return
 	}
 
 	auo := model.AuthUserOrganization{
 		UserId: u.Id,
-		OrgId:  tok.OID,
+		OrgId:  req.OrgId,
 	}
 
 	err = userService.AddUserOrg(&auo)
 	if err != nil {
 		resp.Code = respcode.AddUserFailed
-		resp.Message = "Add User Failed"
+		resp.Message = "Register Failed."
 		common.ResponseJSON(ctx, resp)
 		return
 	}

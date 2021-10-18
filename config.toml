@@ -13,14 +13,19 @@ secret = "2lP2ybr5c3ZKjH2SlZk7krbrv8T9eFxQ"
 
 [redis]
 enable = false
-addr = "192.168.10.76:16379"
-password = "redisUAT"
+addr = "192.168.10.144:16379"
+password = "redis"
 db = 0
 
 [db]
 user = "postgres"
 password = "postgres"
-host = "192.168.10.252"
-port = 5432
-database = "lab_mgt_saas"
+host = "192.168.10.144"
+port = 15432
+database = "postgres"
 ssl = "disable" #require/verify-full/verify-ca/disable
+
+[mail]
+host = "http://192.168.10.144/messager"
+sender = "sender_e949ae24481a9527"
+debug = true

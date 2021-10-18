@@ -5,6 +5,8 @@ import (
 	"github.com/kataras/iris/v12/middleware/recover"
 	"github.com/lishimeng/auth/internal/api/authRoleApi"
 	"github.com/lishimeng/auth/internal/api/authUserApi"
+	"github.com/lishimeng/auth/internal/api/registerUserApi"
+	"github.com/lishimeng/auth/internal/api/sendMailApi"
 	"github.com/lishimeng/auth/internal/api/tokenApi"
 	"github.com/lishimeng/auth/internal/api/userApi"
 )
@@ -19,6 +21,16 @@ func route(root iris.Party) {
 	user(root.Party("/user"))
 	authRoles(root.Party("/authRoles"))
 	authUser(root.Party("/authUser"))
+	registerUser(root.Party("/registerUserApi"))
+	send(root.Party("/mailCode"))
+}
+
+func registerUser(p iris.Party) {
+	p.Post("/", registerUserApi.Register) // 用户注册
+}
+
+func send(p iris.Party) {
+	p.Post("/", sendMailApi.Send) // 发送邮箱验证码
 }
 
 func token(p iris.Party) {
