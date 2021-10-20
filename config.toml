@@ -26,6 +26,6 @@ database = "postgres"
 ssl = "disable" #require/verify-full/verify-ca/disable
 
 [mail]
-host = "http://192.168.10.144/messager"
-sender = "sender_e949ae24481a9527"
-debug = true
+host = "http://192.168.10.144:82/messager"
+sender = "sender_vs49ae24481ryker"
+debug = false

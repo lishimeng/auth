@@ -1,10 +1,8 @@
 package messager
 
-type SimpleSender struct {
+import "github.com/lishimeng/go-log"
 
-}
-
-func (s SimpleSender) SendMail(messager MessageSdk, sender, tpl, subject string, params interface{}, receiverMail string) {
+func SendMail(message MessageSdk, sender, tpl, subject string, params interface{}, receiverMail string) (response Response, err error) {
 	var request Request
 	request.Params = params
 	request.Subject = subject
@@ -12,8 +10,10 @@ func (s SimpleSender) SendMail(messager MessageSdk, sender, tpl, subject string,
 	request.Receiver = receiverMail
 	request.Template = tpl
 
-	_, err := messager.send(request)
+	response, err = message.Send(request)
 	if err != nil {
+		log.Info(err)
 		return
 	}
+	return
 }

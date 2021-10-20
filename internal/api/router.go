@@ -21,8 +21,8 @@ func route(root iris.Party) {
 	user(root.Party("/user"))
 	authRoles(root.Party("/authRoles"))
 	authUser(root.Party("/authUser"))
-	registerUser(root.Party("/registerUserApi"))
-	send(root.Party("/mailCode"))
+	registerUser(root.Party("/registerUser"))
+	send(root.Party("/mailCode/send"))
 }
 
 func registerUser(p iris.Party) {

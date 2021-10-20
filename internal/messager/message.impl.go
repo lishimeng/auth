@@ -3,24 +3,16 @@ package messager
 import (
 	"bytes"
 	"encoding/json"
-	"github.com/lishimeng/auth/internal/etc"
 	"github.com/lishimeng/go-log"
 	"io/ioutil"
 	"net/http"
 	"time"
 )
 
-var message Message
-const path = "/api/send/mail"
-
-func (Message) SendMail(url string, request Request)(code interface{}, err error){
-	message.setPath(path)
-	message.setHost(etc.Config.Mail.Host)
-	message.enable(etc.Config.Mail.Debug)
-
-	log.Info("sendMail url: %s" + url)
-	log.Info("sendMail to: %s" + request.Receiver)
-	if message.getDebug() {
+func (m *Message) SendMail(url string, request Request) (response Response, err error) {
+	log.Info("sendMail url: %s", url)
+	log.Info("sendMail to: %s", request.Receiver)
+	if m.Debug {
 		log.Info("Debug sendMail")
 		return
 	}
@@ -29,12 +21,17 @@ func (Message) SendMail(url string, request Request)(code interface{}, err error
 	jsonStr, _ := json.Marshal(request)
 	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonStr))
 	if err != nil {
-		return -1, err
+		return
 	}
 	defer resp.Body.Close()
 
 	result, _ := ioutil.ReadAll(resp.Body)
-	log.Info("sendMail response: %s", result)
+
+	err = json.Unmarshal(result, &response)
+	if err != nil {
+		return
+	}
+	log.Info("sendMail response: %v", response)
 	return
 
 }

@@ -67,12 +67,12 @@ func RandTxt(n int) string {
 	return string(b)
 }
 
-var codes = []rune("23456789ABCDEFGHJKMNPQRSTUVWXYZ")
+var codes = []rune("2345789ABCDEFGHJKMNPQRSTUVWXYZ")
 func RandCode(n int) string {
 	b := make([]rune, n)
 	r := rand.New(rand.NewSource(time.Now().UnixNano()))
 	for i := range b {
-		b[i] = codes[r.Intn(62+10)]
+		b[i] = codes[r.Intn(len(codes))]
 	}
 	return string(b)
 }
