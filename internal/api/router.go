@@ -43,7 +43,7 @@ func user(p iris.Party) {
 	p.Post("/logout", Authorization, userApi.Logout) // 退出
 	p.Get("/info/{id}", userApi.GenUserInfo)         // 用户信息
 
-	p.Post("/password/change", userApi.ChangePassw
+	p.Post("/password/change", userApi.ChangePassword)
 	p.Post("/password/change_with_key", userApi.ChangePasswordWithKey)
 	//p.Post("/password/reset", userApi.ResetPassword)
 	p.Post("/password/reset", userApi.ResetPwd)
