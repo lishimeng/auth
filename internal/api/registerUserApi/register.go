@@ -18,8 +18,8 @@ type RegisterReq struct {
 	Password string `json:"password,omitempty"`
 	Status   int    `json:"status,omitempty"`
 	OrgId    int    `json:"orgId,omitempty"`
-	code     string `json:"code,omitempty"`
-	imgCode  string `json:"imgCode,omitempty"`
+	Code     string `json:"code,omitempty"`
+	ImgCode  string `json:"imgCode,omitempty"`
 }
 
 type RegisterResp struct {
@@ -51,14 +51,25 @@ func Register(ctx iris.Context) {
 		return
 	}
 	// 判断 邮件验证码
-	isCode, err := ModifyMailCode(req.Email, req.code)
-	if err != nil || !isCode {
+	log.Info("mail: %s, code: %s", req.Email,req.Code)
+	isCode, err := ModifyMailCode(req.Email, req.Code)
+	if err != nil {
+		log.Info("Mail verification code has expired.")
+		log.Info(err)
+		resp.Code = respcode.AddUserFailed
+		resp.Message = "Mail verification code has expired."
+		common.ResponseJSON(ctx, resp)
+		return
+	}
+	if !isCode {
 		log.Info("Mail verification code has expired.")
 		resp.Code = respcode.AddUserFailed
 		resp.Message = "Mail verification code has expired."
 		common.ResponseJSON(ctx, resp)
 		return
 	}
+
+
 	// TODO 判断 图片验证码
 
 	ut := model.TableChangeInfo{
@@ -98,4 +109,17 @@ func Register(ctx iris.Context) {
 	resp.Uid = u.Id
 	resp.Code = common.RespCodeSuccess
 	common.ResponseJSON(ctx, resp)
+}
+
+func ModifyMailCode(email,code string) (isCode bool, err error) {
+	var cacheCode string
+	err = app.GetCache().Get(email,&cacheCode)
+	if err != nil {
+		return
+	}
+	if code != cacheCode{
+		log.Info("cache code: %s", cacheCode)
+		return
+	}
+	return true, err
 }

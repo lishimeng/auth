@@ -21,14 +21,15 @@ func (m *Message) SendMail(url string, request Request) (response Response, err 
 	jsonStr, _ := json.Marshal(request)
 	resp, err := client.Post(url, "application/json", bytes.NewBuffer(jsonStr))
 	if err != nil {
+		log.Info("client Post err")
 		return
 	}
 	defer resp.Body.Close()
 
 	result, _ := ioutil.ReadAll(resp.Body)
-
 	err = json.Unmarshal(result, &response)
 	if err != nil {
+		log.Info("response Unmarshal err, %+v",response)
 		return
 	}
 	log.Info("sendMail response: %v", response)
