@@ -250,3 +250,4 @@ func ResetPwd(ctx iris.Context) {
 	resp.Password = plainPassword
 	common.ResponseJSON(ctx, resp)
 }
+

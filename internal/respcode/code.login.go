@@ -10,4 +10,7 @@ const (
 	editPasswordDefault = 12000
 	EditPasswordSuccess = editPasswordDefault + 1
 	EditPasswordFailed  = EditPasswordSuccess + 1
+
+	sendMailDefault = 13000
+	SendMailFailed = sendMailDefault + 1
 )

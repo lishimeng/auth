@@ -1,8 +1,6 @@
 package authUserApi
 
 import (
-	"strconv"
-
 	"github.com/kataras/iris/v12"
 	"github.com/lishimeng/app-starter"
 	"github.com/lishimeng/auth/internal/common"
@@ -22,11 +20,16 @@ type AddReq struct {
 	Status   int    `json:"status,omitempty"`
 }
 
+type AddResp struct {
+	Uid int `json:"uid,omitempty"`
+	app.Response
+}
+
 // 新增用户
 func Add(ctx iris.Context) {
 	log.Debug("add user")
 	var req AddReq
-	var resp app.Response
+	var resp AddResp
 	var err error
 
 	var tok jwt.Claims
@@ -35,6 +38,8 @@ func Add(ctx iris.Context) {
 	err = ctx.ReadJSON(&req)
 	if err != nil {
 		log.Info("req err")
+		resp.Code = respcode.AddUserFailed
+		resp.Message = "Add User Failed"
 		return
 	}
 
@@ -51,31 +56,28 @@ func Add(ctx iris.Context) {
 	}
 
 	// 新增、get_new_uid
-	uid, err := userService.AddUser(&u)
+	_, err = userService.AddUser(&u)
 	if err != nil {
 		resp.Code = respcode.AddUserFailed
+		resp.Message = "Add User Failed"
 		common.ResponseJSON(ctx, resp)
 		return
 	}
 
-	str := strconv.FormatInt(uid, 10)
-	userId, err := strconv.Atoi(str)
-	if err != nil {
-		log.Info("strconv int64 err")
-		common.ResponseJSON(ctx, resp)
-		return
-	}
 	auo := model.AuthUserOrganization{
-		UserId: userId,
+		UserId: u.Id,
 		OrgId:  tok.OID,
 	}
 
 	err = userService.AddUserOrg(&auo)
 	if err != nil {
+		resp.Code = respcode.AddUserFailed
+		resp.Message = "Add User Failed"
 		common.ResponseJSON(ctx, resp)
 		return
 	}
 
+	resp.Uid = u.Id
 	resp.Code = common.RespCodeSuccess
 	common.ResponseJSON(ctx, resp)
 }

@@ -7,6 +7,7 @@ type Configuration struct {
 	Token   token
 	Redis   redis
 	Db      db
+	Mail    mail
 }
 
 type web struct {
@@ -33,4 +34,10 @@ type db struct {
 	Port     int
 	Database string
 	Ssl      string
+}
+
+type mail struct {
+	Host   string
+	Sender string
+	Debug  bool
 }

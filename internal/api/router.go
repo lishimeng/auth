@@ -5,6 +5,8 @@ import (
 	"github.com/kataras/iris/v12/middleware/recover"
 	"github.com/lishimeng/auth/internal/api/authRoleApi"
 	"github.com/lishimeng/auth/internal/api/authUserApi"
+	"github.com/lishimeng/auth/internal/api/registerUserApi"
+	"github.com/lishimeng/auth/internal/api/sendMailApi"
 	"github.com/lishimeng/auth/internal/api/tokenApi"
 	"github.com/lishimeng/auth/internal/api/userApi"
 )
@@ -19,6 +21,16 @@ func route(root iris.Party) {
 	user(root.Party("/user"))
 	authRoles(root.Party("/authRoles"))
 	authUser(root.Party("/authUser"))
+	registerUser(root.Party("/registerUser"))
+	send(root.Party("/mailCode/send"))
+}
+
+func registerUser(p iris.Party) {
+	p.Post("/", registerUserApi.Register) // 用户注册
+}
+
+func send(p iris.Party) {
+	p.Post("/", sendMailApi.Send) // 发送邮箱验证码
 }
 
 func token(p iris.Party) {
@@ -32,9 +44,9 @@ func user(p iris.Party) {
 	p.Get("/info/{id}", userApi.GenUserInfo)         // 用户信息
 
 	p.Post("/password/change", userApi.ChangePassword)
-	p.Post("/password/reset", userApi.ResetPwd)
-	//p.Post("/password/change", userApi.ChangePasswordWithKey)
+	p.Post("/password/change_with_key", userApi.ChangePasswordWithKey)
 	//p.Post("/password/reset", userApi.ResetPassword)
+	p.Post("/password/reset", userApi.ResetPwd)
 }
 
 // authUser
@@ -49,7 +61,7 @@ func authUser(p iris.Party) {
 
 // authRoles
 func authRoles(p iris.Party) {
-	p.Get("/", authRoleApi.GetRoleList)                              // 角色列表
+	p.Get("/", Authorization, authRoleApi.GetRoleList)                              // 角色列表
 	p.Post("/", Authorization, authRoleApi.Add)                      // 添加角色
 	p.Delete("/{id}", Authorization, authRoleApi.Del)                // 删除角色(id:角色关系表id)
 	p.Delete("/{uid}/{rid}", Authorization, authRoleApi.DelUserRole) // 删除用户的角色,需要通过user和role查询
