@@ -3,7 +3,7 @@ module github.com/lishimeng/auth
 go 1.13
 
 require (
-	github.com/astaxie/beego v1.12.1
+	github.com/astaxie/beego v1.12.2
 	github.com/dgrijalva/jwt-go v3.2.0+incompatible
 	github.com/kataras/iris/v12 v12.2.0-beta1
 	github.com/lib/pq v1.10.2
