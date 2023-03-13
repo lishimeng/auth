@@ -6,6 +6,7 @@ import (
 	"github.com/lishimeng/auth/internal/api/authRoleApi"
 	"github.com/lishimeng/auth/internal/api/authUserApi"
 	"github.com/lishimeng/auth/internal/api/registerUserApi"
+	myrsa "github.com/lishimeng/auth/internal/api/rsaApi"
 	"github.com/lishimeng/auth/internal/api/sendMailApi"
 	"github.com/lishimeng/auth/internal/api/tokenApi"
 	"github.com/lishimeng/auth/internal/api/userApi"
@@ -23,6 +24,7 @@ func route(root iris.Party) {
 	authUser(root.Party("/authUser"))
 	registerUser(root.Party("/registerUser"))
 	send(root.Party("/mailCode/send"))
+	rsaHandel(root.Party("/key"))
 }
 
 func registerUser(p iris.Party) {
@@ -37,6 +39,12 @@ func token(p iris.Party) {
 	p.Post("/verify", tokenApi.VerifyToken)
 }
 
+func rsaHandel(p iris.Party) {
+	// 获取公钥
+	p.Get("/getkey", myrsa.GetPubKey)
+	// 刷新密钥、公钥
+	p.Get("/refreshingkey", myrsa.RefreshPubKey)
+}
 func user(p iris.Party) {
 	p.Post("/sign_in", userApi.SignIn)               // 登录
 	p.Post("/sign_in_card", userApi.SignInCard)      // 智能卡登录
@@ -61,7 +69,7 @@ func authUser(p iris.Party) {
 
 // authRoles
 func authRoles(p iris.Party) {
-	p.Get("/", Authorization, authRoleApi.GetRoleList)                              // 角色列表
+	p.Get("/", Authorization, authRoleApi.GetRoleList)               // 角色列表
 	p.Post("/", Authorization, authRoleApi.Add)                      // 添加角色
 	p.Delete("/{id}", Authorization, authRoleApi.Del)                // 删除角色(id:角色关系表id)
 	p.Delete("/{uid}/{rid}", Authorization, authRoleApi.DelUserRole) // 删除用户的角色,需要通过user和role查询
