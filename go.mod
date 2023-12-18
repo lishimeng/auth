@@ -11,5 +11,5 @@ require (
 	github.com/lishimeng/go-libs v0.1.0
 	github.com/lishimeng/go-log v1.0.0
 	github.com/lishimeng/go-orm v1.1.1
-	golang.org/x/crypto v0.0.0-20220411220226-7b82a4e95df4
+	golang.org/x/crypto v0.17.0
 )
